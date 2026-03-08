@@ -1,0 +1,56 @@
+version: "3"
+networks:
+  # 해당 도커 컴포즈로 실행한 컨테이너는 동일한 네트워크를 공유한다.
+  backend_network:
+# services에서는 여러개의 컨테이너를 생성할수 있습니다.
+services:
+  server:
+    # 이미지 생성을 위해 해당 디렉토리에 있는 Dockerfile를 build한다.
+    # docker-compose파일에 같은경로로 Dockerfile이 있을시 '.' 을 찍으면 된다.
+    container_name: alon_server_main_test
+    # 같은경로가 아닐시 상대경로로 지정해서 실행한다.
+    build:
+      context: ./
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    #개발용이기 때문에 코드수정이 있으면 컨테이너에서도 반영
+    volumes:
+      - ./src:/nestjs/src
+    networks:
+      - backend_network
+    # 해당 서버가 실행되기전 반드시 실행되고 있어야 하는 컨테이너를 설정합니다.
+    env_file:
+      - ./.env
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "3"
+        max-size: "10m"
+  postgres:
+    container_name: alon_postgres
+    image: 'postgres:12'
+    # postgres의 데이터를 관리하기 위해 볼륨을 사용자가 네이밍 해서 관리한다.
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    networks:
+      - backend_network
+    # 환경변수(environment)를 직접 작성할수 있다.
+    ports:
+      - '4001:5432'
+    environment:
+      POSTGRES_USER: alex
+      POSTGRES_PASSWORD: bestpassword
+      POSTGRES_DB: postgres
+    # - POSTGRES_USER=max
+    logging:
+      driver: 'json-file'
+      options:
+        # 로그의 파일 갯수
+        max-file: '3'
+        # 로그의 파일 크기(10m = 10 MB : megabites)
+        max-size: '10m'
+# 네이밍 볼륨이 있을시 반드시 루트에 한번더 volumes 안에 해당 네이밍 볼륨 이름을 넣는다.
+volumes:
+  # postgres는 data라는 네이밍 볼륨을 사용하기 때문에 아래에 추가해 준다.
+  pg_data:
