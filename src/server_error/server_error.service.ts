@@ -28,22 +28,27 @@ export class ServerErrorService {
     }
   }
 
-  async getErrorCode(message: string = 'Server Error', statusCode: number = -1) {
+  async getErrorCode(location : string, message: string = 'Server Error', statusCode: number = -1) {
 
     try {
       console.log("init statusCode : ", statusCode);
+      console.log("getErrorCode message : ", message);
 
       if (statusCode < 0) {
         const errorData: { message: string, statusCode: number } = JSON.parse(message);
+        console.log("getErrorCode errorData : ", errorData)
         message = errorData['message'];
         statusCode = errorData['statusCode']
       }
     } catch (err) {
       // DB에 저장
       await this.serverErrorRepository.createOne({
+        location,
         statusCode,
         note: 'getErrorCode Error : ' + message
       })
+
+      throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
 
     }
 
@@ -52,6 +57,7 @@ export class ServerErrorService {
 
     // DB에 저장
     const record = await this.serverErrorRepository.createOne({
+      location,
       statusCode,
       note: message
     })
@@ -85,7 +91,7 @@ export class ServerErrorService {
 
 
 
-    // throw new HttpException(message, statusCode)
+    throw new HttpException(message, statusCode)
   }
 
   CONFLICT = [

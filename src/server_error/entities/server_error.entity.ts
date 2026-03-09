@@ -16,6 +16,9 @@ export class ServerErrorEntity {
     @PrimaryGeneratedColumn('increment')
     id: number;
 
+    @Column({type : 'varchar', nullable : false, comment : '에러 위치'})
+    location : string;
+
     @Column({ type: 'int', nullable: false, comment: '서버 상태로그' })
     statusCode: number;
 
