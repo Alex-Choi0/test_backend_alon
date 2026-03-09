@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ServerErrorModule } from './server_error/server_error.module';
 
 @Module({
   imports: [
@@ -22,7 +23,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       database: process.env.DB_DATABASE,
       autoLoadEntities: true,
       synchronize: process.env.DB_SYNCHRONIZE == 'true',
-    })
+    }),
+    ServerErrorModule
   ],
   controllers: [AppController],
   providers: [AppService],
