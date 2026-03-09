@@ -6,6 +6,7 @@ import * as Joi from '@hapi/joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServerErrorModule } from './server_error/server_error.module';
 import { SensorModule } from './sensor/sensor.module';
+import { SensorPayloadModule } from './sensor_payload/sensor_payload.module';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { SensorModule } from './sensor/sensor.module';
       synchronize: process.env.DB_SYNCHRONIZE == 'true',
     }),
     ServerErrorModule,
-    SensorModule
+    SensorModule,
+    SensorPayloadModule
   ],
   controllers: [AppController],
   providers: [AppService],
