@@ -35,6 +35,9 @@ export class SensorEntity {
     @Column({ type: 'timestamp with time zone', nullable: true, comment: '마지막 센서기준 데이터생성시간(UTC로 통일)' })
     lastTime: Date | null;
 
+    @Column({ type: 'int', nullable: true, comment: '마지막 센서 기록ID' })
+    lastSensorPayloadId: number | null
+
     @CreateDateColumn({
         type: 'timestamp with time zone',
         comment: '레코드 생성 날짜',

@@ -42,4 +42,14 @@ export class SensorService {
       await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode']);
     }
   }
+
+  async updateOneById(id: string, dto: Partial<SensorEntity>) {
+    try {
+
+      return await this.sensorRepository.updateOneById(id, dto);
+
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode']);
+    }
+  }
 }

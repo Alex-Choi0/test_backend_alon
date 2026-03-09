@@ -3,6 +3,7 @@ import { ServerErrorService } from 'src/server_error/server_error.service';
 import { TimerService } from 'src/utils/service_timer/timer.service';
 import { CreateOneSensorPayloadDto } from './dto/create-one-sensor_payload.dto';
 import { SensorPayloadRepository } from './repository/sensor_payload.repository';
+import { SensorService } from 'src/sensor/sensor.service';
 
 @Injectable()
 export class SensorPayloadService {
@@ -14,7 +15,10 @@ export class SensorPayloadService {
     private readonly serverErrorService: ServerErrorService,
 
     @Inject(TimerService)
-    private readonly timerService: TimerService
+    private readonly timerService: TimerService,
+
+    @Inject(SensorService)
+    private readonly sensorService: SensorService
   ) { }
 
   private errorLocation = 'SensorPayloadService';
@@ -23,10 +27,19 @@ export class SensorPayloadService {
     try {
 
       const record = this.createRecord(dto);
+      // sensor record를 수정
 
 
+      const saveRecord = await this.sensorPayloadRepository.createOne(record)
+      const updateRecord = await this.sensorService.updateOneById(saveRecord.serial_number, {
+        lastMode: saveRecord.mode,
+        lastTime: saveRecord.timestamp,
+        lastSensorPayloadId: saveRecord.id,
+      })
 
-      return await this.sensorPayloadRepository.createOne(record)
+      console.log("SensorPayloadService createOne updateRecord : ", updateRecord);
+
+      return saveRecord
 
     } catch (err) {
       await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode'])
