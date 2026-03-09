@@ -7,7 +7,7 @@ services:
   server:
     # 이미지 생성을 위해 해당 디렉토리에 있는 Dockerfile를 build한다.
     # docker-compose파일에 같은경로로 Dockerfile이 있을시 '.' 을 찍으면 된다.
-    container_name: alon_server_main_test
+    container_name: alon_backend_test
     # 같은경로가 아닐시 상대경로로 지정해서 실행한다.
     build:
       context: ./
@@ -28,7 +28,7 @@ services:
         max-file: "3"
         max-size: "10m"
   postgres:
-    container_name: alon_postgres
+    container_name: alon_database_postgres
     image: 'postgres:12'
     # postgres의 데이터를 관리하기 위해 볼륨을 사용자가 네이밍 해서 관리한다.
     volumes:
