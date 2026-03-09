@@ -41,14 +41,15 @@ export class ServerErrorService {
         statusCode = errorData['statusCode']
       }
     } catch (err) {
-      // DB에 저장
-      await this.serverErrorRepository.createOne({
-        location,
-        statusCode,
-        note: 'getErrorCode Error : ' + message
-      })
+      console.log("getErrorCode catch err : ", err);
+      // // DB에 저장
+      // await this.serverErrorRepository.createOne({
+      //   location,
+      //   statusCode,
+      //   note: 'getErrorCode Error : ' + message
+      // })
 
-      throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
+      // throw new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
 
     }
 
