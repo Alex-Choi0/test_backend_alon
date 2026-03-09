@@ -25,4 +25,20 @@ export class SensorService {
       await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode']);
     }
   }
+
+  async findOneById(id : string){
+    try{
+
+      const record = await this.sensorRepository.findOneById(id);
+
+      if(!record) {
+        throw new Error('존재하지 않는 시리얼번호 입니다.');
+      }
+
+      return record;
+
+    } catch(err){
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode']);
+    }
+  }
 }

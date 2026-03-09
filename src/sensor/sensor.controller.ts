@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Inject } from '@nestjs/common';
 import { SensorService } from './sensor.service';
 import { ServerErrorService } from 'src/server_error/server_error.service';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiParam } from '@nestjs/swagger';
 import { CreateOneSensorDto } from './dto/create-one-sensor.dto';
 
 @Controller('sensor')
@@ -32,5 +32,23 @@ export class SensorController {
     }
   }
 
+  @Get('9/find/one/:id')
+  @ApiOperation({
+    summary : '시리얼번호(ID)를 이용해서 하나의 센서를 조회한다. #9',
+    description : '하나의 센서를 조회한다.'
+  })
+  @ApiParam({
+    name : 'id',
+    description : '조회할 센서의 시리얼번호(ID)',
+    example : 'SANSOR-A-1004',
+    required : true
+  })
+  async findOneById(@Param('id') id : string){
+    try{
+      return await this.sensorService.findOneById(id);
+    } catch(err){
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode']);
+    }
+  }
   
 }
