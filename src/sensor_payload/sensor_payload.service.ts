@@ -33,6 +33,18 @@ export class SensorPayloadService {
     }
   }
 
+  async createMany(dtos: CreateOneSensorPayloadDto[]) {
+    try {
+
+      const records = dtos.map(ele => this.createRecord(ele));
+      return await this.sensorPayloadRepository.createMany(records)
+
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode'])
+    }
+  }
+
+
   createRecord(dto: CreateOneSensorPayloadDto) {
 
     const airQuality = dto.air_quality;
