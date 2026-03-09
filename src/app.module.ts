@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import * as Joi from '@hapi/joi';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServerErrorModule } from './server_error/server_error.module';
+import { SensorModule } from './sensor/sensor.module';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { ServerErrorModule } from './server_error/server_error.module';
       autoLoadEntities: true,
       synchronize: process.env.DB_SYNCHRONIZE == 'true',
     }),
-    ServerErrorModule
+    ServerErrorModule,
+    SensorModule
   ],
   controllers: [AppController],
   providers: [AppService],
