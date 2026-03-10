@@ -11,7 +11,7 @@ export class ScheduleProcessService {
 
   private errorLocation = 'ScheduleProcessService';
 
-  @Cron('0 */2 * * * *')
+  @Cron('*/10 * * * * *')
   async scheduleActive() {
     try {
 
