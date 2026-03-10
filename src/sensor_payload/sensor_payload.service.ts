@@ -49,8 +49,32 @@ export class SensorPayloadService {
   async createMany(dtos: CreateOneSensorPayloadDto[]) {
     try {
 
-      const records = dtos.map(ele => this.createRecord(ele));
-      return await this.sensorPayloadRepository.createMany(records)
+      let records = dtos.map(ele => this.createRecord(ele));
+      const lastIndex: number = records.length - 1;
+
+      console.log("SensorPayloadService createMany lastIndex : ", lastIndex);
+
+      // timestamp기준으로 정렬
+      records = records.sort((a, b) => {
+        if (a.timestamp > b.timestamp) return 1;
+        else return -1
+      })
+
+      console.log("SensorPayloadService createMany records : ", records);
+
+
+      const saveRecords = await this.sensorPayloadRepository.createMany(records)
+
+      const updateRecord = await this.sensorService.updateOneById(saveRecords[0].serial_number, {
+        lastMode: saveRecords[lastIndex].mode,
+        lastTime: saveRecords[lastIndex].timestamp,
+        lastSensorPayloadId: saveRecords[lastIndex].id,
+      })
+
+      console.log("SensorPayloadService createOne createMany : ", updateRecord);
+
+      return saveRecords;
+
 
     } catch (err) {
       await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode'])
