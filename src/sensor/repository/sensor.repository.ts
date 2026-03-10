@@ -16,6 +16,11 @@ export class SensorRepository {
         return await this.sensorEntity.save(record);
     }
 
+    async createMany(dtos: Partial<SensorEntity>[]) {
+        const records = this.sensorEntity.create(dtos);
+        return await this.sensorEntity.save(records);
+    }
+
     // 하나의 센서를 ID로 찾는다.
     async findOneById(id: string) {
         const sql = this.sensorEntity.createQueryBuilder('record')
