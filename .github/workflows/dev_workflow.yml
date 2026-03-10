@@ -57,7 +57,7 @@ jobs:
 
       # 🔥 로컬에서 직접 이미지 빌드
       - name: Build Docker image locally
-        run: docker build -f Dockerfile.development -t test-alon-backend:latest .
+        run: docker build -f Dockerfile.dev -t test-alon-backend:latest .
 
       # 🔥 새 컨테이너 실행
       - name: Run new container
