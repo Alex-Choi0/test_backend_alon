@@ -26,15 +26,18 @@ async function bootstrap() {
     .setDescription(
       `
       개발자 : 최재호
+      EMAIL : choijeaho86@gmail.com
 
       사양
       - node : v24.14.0
       - nestjs : 11.0.16
+
+      기술 블로그 : https://engineeringshw.blogspot.com/
+
+      스택 오버플로우 : https://stackoverflow.com/users/15889317/alex-choi
+
+      깃 허브 : https://github.com/Alex-Choi0/test_backend_alon.git
     `,
-    )
-    .setExternalDoc(
-      'GitHub Link',
-      'https://github.com/Alex-Choi0/test_backend_alon.git',
     )
     .build();
 

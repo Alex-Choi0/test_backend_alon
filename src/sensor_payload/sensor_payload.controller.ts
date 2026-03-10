@@ -1,9 +1,10 @@
 import { Body, Controller, Inject, Post } from '@nestjs/common';
-import { ApiBody, ApiCreatedResponse, ApiOperation, getSchemaPath } from '@nestjs/swagger';
+import { ApiBody, ApiCreatedResponse, ApiOperation, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { ServerErrorService } from 'src/server_error/server_error.service';
 import { CreateOneSensorPayloadDto } from './dto/create-one-sensor_payload.dto';
 import { SensorPayloadService } from './sensor_payload.service';
 
+@ApiTags('센서 데이터를 수집하고 조회하는 API')
 @Controller('sensor-payload')
 export class SensorPayloadController {
   constructor(
