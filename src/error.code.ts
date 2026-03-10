@@ -68,7 +68,8 @@ export class ErrorCode {
 
   BAD_REQUEST = [
     '과거시간으로 설정할수 없습니다.',
-    '잘못된 시간입니다.'
+    '잘못된 시간입니다.',
+    '동일한 시리얼 데이터를 전송해야 합니다.'
   ]
 
   FORBIDDEN = [

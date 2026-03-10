@@ -36,14 +36,23 @@ export class SensorService {
     }
   }
 
+  async createMany(dtos: Partial<SensorEntity>[]) {
+    try {
+
+
+      return await this.sensorRepository.createMany(dtos);
+
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode']);
+    }
+  }
+
+
   async findOneById(id: string) {
     try {
 
       const record = await this.sensorRepository.findOneById(id);
 
-      if (!record) {
-        throw new Error('존재하지 않는 시리얼번호 입니다.');
-      }
 
       return record;
 
@@ -166,6 +175,40 @@ export class SensorService {
           return [await this.findOneById(ids[0])];
         } else {
           return await this.sensorRepository.findAllByIds(ids);
+        }
+
+      }
+
+      return [];
+
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode'])
+    }
+  }
+
+  async notFoundByIds(ids: string[]) {
+    try {
+
+      if (Array.isArray(ids) && ids.length > 0) {
+
+        if (ids.length == 1) {
+          const result = [await this.findOneById(ids[0])];
+          if (result.length <= 0) return [ids[0]];
+        } else {
+          const result = await this.sensorRepository.findAllByIds(ids);
+          return ids.filter((ele) => {
+            let bool: boolean = false;
+            for (let i = 0; i < result.length; i++) {
+              if (ele == result[i].id) {
+                bool = true;
+                break;
+              }
+            }
+
+            if (!bool) return true;
+            return false;
+
+          })
         }
 
       }

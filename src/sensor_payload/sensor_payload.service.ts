@@ -4,7 +4,7 @@ import { TimerService } from 'src/utils/service_timer/timer.service';
 import { CreateOneSensorPayloadDto } from './dto/create-one-sensor_payload.dto';
 import { SensorPayloadRepository } from './repository/sensor_payload.repository';
 import { SensorService } from 'src/sensor/sensor.service';
-import { SENSOR_STATUS_ENUM } from 'src/enum';
+import { MODEENUM, MODESELECT, SENSOR_STATUS_ENUM } from 'src/enum';
 import { SensorEntity } from 'src/sensor/entities/sensor.entity';
 
 @Injectable()
@@ -29,24 +29,26 @@ export class SensorPayloadService {
     try {
 
       const record = this.createRecord(dto);
-      // sensor record를 수정
-
-      const existSensor: SensorEntity | undefined = await this.sensorService.findOneById(dto.serial_number);
+      const existSensor = await this.sensorService.findOneById(dto.serial_number);
+      const saveRecord = await this.sensorPayloadRepository.createOne(record)
 
       if (!existSensor) {
-        throw new Error('존재하지 않는 시리얼번호 입니다.');
+        const createRecord = await this.sensorService.createOne({
+          id: saveRecord.serial_number,
+          lastMode: saveRecord.mode,
+          status: SENSOR_STATUS_ENUM.NORMAL,
+          lastTime: saveRecord.createdAt,
+          lastSensorPayloadId: saveRecord.id,
+        })
+      } else {
+        const updateRecord = await this.sensorService.updateOneById(saveRecord.serial_number, {
+          lastMode: saveRecord.mode,
+          status: SENSOR_STATUS_ENUM.NORMAL,
+          lastTime: saveRecord.createdAt,
+          lastSensorPayloadId: saveRecord.id,
+        })
       }
 
-
-      const saveRecord = await this.sensorPayloadRepository.createOne(record)
-      const updateRecord = await this.sensorService.updateOneById(saveRecord.serial_number, {
-        lastMode: saveRecord.mode,
-        status: SENSOR_STATUS_ENUM.NORMAL,
-        lastTime: saveRecord.createdAt,
-        lastSensorPayloadId: saveRecord.id,
-      })
-
-      console.log("SensorPayloadService createOne updateRecord : ", updateRecord);
 
       return saveRecord
 
@@ -60,13 +62,9 @@ export class SensorPayloadService {
 
       const sensorIds: string[] = [...new Set(dtos.map(ele => ele.serial_number))]
       console.log('SensorPayloadService createMAny sensorIds : ', sensorIds)
+      if (sensorIds.length > 1) throw new Error('동일한 시리얼 데이터를 전송해야 합니다.')
 
-      const existSensors = await this.sensorService.findAllByIds(sensorIds);
-
-
-      if (Array.isArray(existSensors) && !(existSensors.length == sensorIds.length)) {
-        throw new Error('존재하지 않는 시리얼번호 입니다.');
-      }
+      const existSensor = await this.sensorService.findOneById(sensorIds[0]);
 
       let records = dtos.map(ele => this.createRecord(ele));
       const lastIndex: number = records.length - 1;
@@ -84,14 +82,24 @@ export class SensorPayloadService {
 
       const saveRecords = await this.sensorPayloadRepository.createMany(records)
 
-      const updateRecord = await this.sensorService.updateOneById(saveRecords[0].serial_number, {
-        lastMode: saveRecords[lastIndex].mode,
-        status: SENSOR_STATUS_ENUM.NORMAL,
-        lastTime: saveRecords[lastIndex].createdAt,
-        lastSensorPayloadId: saveRecords[lastIndex].id,
-      })
+      if (!existSensor) {
+        // 등록되지 않은 시리얼 번호 확인
+        const createRecord = await this.sensorService.createOne({
+          id: saveRecords[lastIndex].serial_number,
+          lastMode: saveRecords[lastIndex].mode,
+          status: SENSOR_STATUS_ENUM.NORMAL,
+          lastTime: saveRecords[lastIndex].createdAt,
+          lastSensorPayloadId: saveRecords[lastIndex].id,
+        })
 
-      console.log("SensorPayloadService createOne createMany : ", updateRecord);
+      } else {
+        const updateRecord = await this.sensorService.updateOneById(saveRecords[0].serial_number, {
+          lastMode: saveRecords[lastIndex].mode,
+          status: SENSOR_STATUS_ENUM.NORMAL,
+          lastTime: saveRecords[lastIndex].createdAt,
+          lastSensorPayloadId: saveRecords[lastIndex].id,
+        })
+      }
 
       return saveRecords;
 
@@ -115,6 +123,22 @@ export class SensorPayloadService {
     }
 
     return { ...dto, timestamp, locationLat, locationLng, airQuality };
+  }
+
+  async findManyByOption(startDate: string, endDate: string, sensorStartDate: string, sensorEndDate: string, skip: number, take: number, serial_number: string, mode: MODESELECT = MODESELECT.전체) {
+    try {
+
+      // startDate, endDate, sensorStartDate, sensorEndDate 검증 및 UTC시간으로 변환
+      startDate = startDate == '-' ? startDate : this.timerService.changeToUTC(startDate);
+      endDate = endDate == '-' ? endDate : this.timerService.changeToUTC(endDate);
+      sensorStartDate = sensorStartDate == '-' ? sensorStartDate : this.timerService.changeToUTC(sensorStartDate);
+      sensorEndDate = sensorEndDate == '-' ? sensorEndDate : this.timerService.changeToUTC(sensorEndDate);
+
+      return await this.sensorPayloadRepository.findManyByOptions(startDate, endDate, sensorStartDate, sensorEndDate, skip, take, serial_number, mode);
+
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode'])
+    }
   }
 }
 

@@ -1,6 +1,6 @@
 import { InjectRepository } from "@nestjs/typeorm";
-import { OrderEnum } from "src/enum";
-import { Repository } from "typeorm";
+import { MODEENUM, MODESELECT, OrderEnum } from "src/enum";
+import { Or, Repository } from "typeorm";
 import { SensorPayloadColumns, SensorPayloadEntity } from "../entities/sensor_payload.entity";
 
 export class SensorPayloadRepository {
@@ -29,5 +29,33 @@ export class SensorPayloadRepository {
             .orderBy(`record.${orderColumn}`, order)
 
         return await sql.getManyAndCount();
+    }
+
+    async findManyByOptions(startDate: string, endDate: string, sensorStartDate: string, sensorEndDate: string, skip: number, take: number, serial_number: string, mode: MODESELECT = MODESELECT.전체, order: OrderEnum = OrderEnum.DESC, orderColumn: SensorPayloadColumns = SensorPayloadColumns.id) {
+        const sql = this.sensorPayloadEntity.createQueryBuilder('record')
+            .where('1=1')
+            .skip(skip)
+            .take(take)
+            .orderBy(`record.${orderColumn}`, order);
+
+        if (serial_number != '-') {
+            sql.andWhere('record.serial_number = :serial_number', { serial_number });
+        }
+
+        if (startDate != '-' && endDate != '-') {
+            sql.andWhere('record.createdAt BETWEEN :startDate AND :endDate', { startDate, endDate });
+        }
+
+        if (sensorStartDate != '-' && sensorEndDate != '-') {
+            sql.andWhere('record.timestamp BETWEEN :sensorStartDate AND :sensorEndDate', { sensorStartDate, sensorEndDate });
+        }
+
+        if (mode != MODESELECT.전체) {
+            console.log("SensorPayloadRepository findManyByOptions mode : ", mode);
+            sql.andWhere('record.mode = :mode', { mode })
+        }
+
+        return await sql.getManyAndCount();
+
     }
 }
