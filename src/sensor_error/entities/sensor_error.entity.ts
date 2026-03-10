@@ -1,5 +1,6 @@
 import { MODEENUM } from "src/enum";
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { SensorPayloadEntity } from "src/sensor_payload/entities/sensor_payload.entity";
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 @Entity({
   name: 'sensor_error',
@@ -21,6 +22,9 @@ export class SensorErrorEntity {
   @Column({ type: 'timestamp with time zone', nullable: false, comment: '마지막 센서기준 데이터생성시간(UTC로 통일)' })
   lastTime: Date;
 
+  @Column({ type: 'int', nullable: false, comment: '마지막 수신한 데이터 시간으로부터 지난 시간(초)' })
+  delay_sec: number;
+
   @CreateDateColumn({
     type: 'timestamp with time zone',
     comment: '레코드 생성 날짜',
@@ -32,4 +36,10 @@ export class SensorErrorEntity {
     comment: '레코드 업데이트 날짜',
   })
   updatedAt: Date;
+
+  @OneToOne(() => SensorPayloadEntity, (payload) => payload, {
+    onDelete: 'CASCADE'
+  })
+  @JoinColumn({ name: 'lastPayLoadId' })
+  lastPayload: SensorPayloadEntity
 }

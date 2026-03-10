@@ -98,7 +98,8 @@ export class SensorService {
               serial_number: ele.id,
               lastPayLoadId: ele.lastSensorPayloadId ? ele.lastSensorPayloadId : undefined,
               lastMode: ele.lastMode ? ele.lastMode : undefined,
-              lastTime: ele.lastTime ? ele.lastTime : undefined
+              lastTime: ele.lastTime ? ele.lastTime : undefined,
+              delay_sec: this.timerService.calculateSecondBetween(ele.updatedAt, new Date()),
             }
           }))
 
