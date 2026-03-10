@@ -4,6 +4,7 @@ import { TimerService } from 'src/utils/service_timer/timer.service';
 import { CreateOneSensorPayloadDto } from './dto/create-one-sensor_payload.dto';
 import { SensorPayloadRepository } from './repository/sensor_payload.repository';
 import { SensorService } from 'src/sensor/sensor.service';
+import { SENSOR_STATUS_ENUM } from 'src/enum';
 
 @Injectable()
 export class SensorPayloadService {
@@ -33,6 +34,7 @@ export class SensorPayloadService {
       const saveRecord = await this.sensorPayloadRepository.createOne(record)
       const updateRecord = await this.sensorService.updateOneById(saveRecord.serial_number, {
         lastMode: saveRecord.mode,
+        status: SENSOR_STATUS_ENUM.NORMAL,
         lastTime: saveRecord.createdAt,
         lastSensorPayloadId: saveRecord.id,
       })
@@ -67,6 +69,7 @@ export class SensorPayloadService {
 
       const updateRecord = await this.sensorService.updateOneById(saveRecords[0].serial_number, {
         lastMode: saveRecords[lastIndex].mode,
+        status: SENSOR_STATUS_ENUM.NORMAL,
         lastTime: saveRecords[lastIndex].createdAt,
         lastSensorPayloadId: saveRecords[lastIndex].id,
       })

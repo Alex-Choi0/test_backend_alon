@@ -38,7 +38,7 @@ export class SensorEntity {
     @Column({ type: 'int', nullable: true, comment: '마지막 센서 기록ID' })
     lastSensorPayloadId: number | null
 
-    @Column({ type: 'enum', nullable: false, enum: SENSOR_STATUS_ENUM, default: SENSOR_STATUS_ENUM.NORMAL, comment: '센서의 동작상태' })
+    @Column({ type: 'enum', nullable: false, enum: SENSOR_STATUS_ENUM, default: SENSOR_STATUS_ENUM.STANDBY, comment: '센서의 동작상태' })
     status: SENSOR_STATUS_ENUM;
 
     @CreateDateColumn({
