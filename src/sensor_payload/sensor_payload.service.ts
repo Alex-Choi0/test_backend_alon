@@ -4,7 +4,7 @@ import { TimerService } from 'src/utils/service_timer/timer.service';
 import { CreateOneSensorPayloadDto } from './dto/create-one-sensor_payload.dto';
 import { SensorPayloadRepository } from './repository/sensor_payload.repository';
 import { SensorService } from 'src/sensor/sensor.service';
-import { SENSOR_STATUS_ENUM } from 'src/enum';
+import { MODEENUM, MODESELECT, SENSOR_STATUS_ENUM } from 'src/enum';
 import { SensorEntity } from 'src/sensor/entities/sensor.entity';
 
 @Injectable()
@@ -123,6 +123,22 @@ export class SensorPayloadService {
     }
 
     return { ...dto, timestamp, locationLat, locationLng, airQuality };
+  }
+
+  async findManyByOption(startDate: string, endDate: string, sensorStartDate: string, sensorEndDate: string, skip: number, take: number, serial_number: string, mode: MODESELECT = MODESELECT.전체) {
+    try {
+
+      // startDate, endDate, sensorStartDate, sensorEndDate 검증 및 UTC시간으로 변환
+      startDate = startDate == '-' ? startDate : this.timerService.changeToUTC(startDate);
+      endDate = endDate == '-' ? endDate : this.timerService.changeToUTC(endDate);
+      sensorStartDate = sensorStartDate == '-' ? sensorStartDate : this.timerService.changeToUTC(sensorStartDate);
+      sensorEndDate = sensorEndDate == '-' ? sensorEndDate : this.timerService.changeToUTC(sensorEndDate);
+
+      return await this.sensorPayloadRepository.findManyByOptions(startDate, endDate, sensorStartDate, sensorEndDate, skip, take, serial_number, mode);
+
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode'])
+    }
   }
 }
 

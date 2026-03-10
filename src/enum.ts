@@ -8,6 +8,12 @@ export enum MODEENUM {
   EMERGENCY = 'EMERGENCY'
 }
 
+export enum MODESELECT {
+  전체 = '전체',
+  NORMAL = 'NORMAL',
+  EMERGENCY = 'EMERGENCY'
+}
+
 export enum SENSOR_STATUS_ENUM {
   STANDBY = 'STANDBY', // 대기상태
   NORMAL = 'NORMAL', // 동작상태
