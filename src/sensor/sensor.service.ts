@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ServerErrorService } from 'src/server_error/server_error.service';
-import { SensorEntity } from './entities/sensor.entity';
+import { SensorColumns, SensorEntity } from './entities/sensor.entity';
 import { SensorRepository } from './repository/sensor.repository';
-import { MODEENUM, SENSOR_STATUS_ENUM } from 'src/enum';
+import { MODEENUM, MODESELECT, OrderEnum, SENSOR_STATUS_ENUM, SENSOR_STATUS_SELECT } from 'src/enum';
 import { TimerService } from 'src/utils/service_timer/timer.service';
 import { SensorErrorService } from 'src/sensor_error/sensor_error.service';
 
@@ -217,6 +217,32 @@ export class SensorService {
 
     } catch (err) {
       await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode'])
+    }
+  }
+
+  async findManyByOptions(
+    id: string,
+    name: string,
+    model: string,
+    manufacturer: string,
+    startDate: string,
+    endDate: string,
+    sensorStartDate: string,
+    sensorEndDate: string,
+    skip: number,
+    take: number,
+    lastModeSelect: MODESELECT = MODESELECT.전체,
+    statusSelect: SENSOR_STATUS_SELECT = SENSOR_STATUS_SELECT.전체,
+    order: OrderEnum = OrderEnum.DESC,
+    orderColumn: SensorColumns = SensorColumns.id
+  ) {
+    try {
+
+      return await this.sensorRepository.findManyByOption(id, name, model, manufacturer, startDate, endDate, sensorStartDate, sensorEndDate, skip, take, lastModeSelect, statusSelect, order, orderColumn);
+
+
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode']);
     }
   }
 }

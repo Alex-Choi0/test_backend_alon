@@ -19,3 +19,10 @@ export enum SENSOR_STATUS_ENUM {
   NORMAL = 'NORMAL', // 동작상태
   MALFUNCTION = 'MALFUNCTION' // 동작이 잘못된 상태
 }
+
+export enum SENSOR_STATUS_SELECT {
+  전체 = '전체',
+  STANDBY = 'STANDBY', // 대기상태
+  NORMAL = 'NORMAL', // 동작상태
+  MALFUNCTION = 'MALFUNCTION' // 동작이 잘못된 상태
+}
