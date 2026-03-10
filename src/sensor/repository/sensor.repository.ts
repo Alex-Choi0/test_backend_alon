@@ -84,4 +84,16 @@ export class SensorRepository {
         return await sql.execute();
     }
 
+    async findAllByIds(ids: string[]) {
+        if (Array.isArray(ids) && ids.length <= 0) return [];
+        const sql = this.sensorEntity.createQueryBuilder()
+        if (ids.length == 1) {
+            sql.where('id = :id', { id: ids[0] })
+        } else if (ids.length > 1) {
+            sql.where('id IN(:...ids)', { ids })
+        }
+        return await sql.getMany();
+
+    }
+
 }

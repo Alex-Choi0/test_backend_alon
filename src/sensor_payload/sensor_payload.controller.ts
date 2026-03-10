@@ -19,7 +19,7 @@ export class SensorPayloadController {
   @Post('4/create/one')
   @ApiOperation({
     summary: '하나의 센서가 하나의 데이터를 전송한다. #4',
-    description: '하나의 센서가 단일 데이터를 전송한다.'
+    description: '하나의 센서가 단일 데이터를 전송한다. sensor에 등록되어 있어야 한다.'
   })
   @ApiCreatedResponse({
     description: `정상적으로 저장시\n

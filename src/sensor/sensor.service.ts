@@ -156,4 +156,24 @@ export class SensorService {
 
 
   }
+
+  async findAllByIds(ids: string[]) {
+    try {
+
+      if (Array.isArray(ids) && ids.length > 0) {
+
+        if (ids.length == 1) {
+          return [await this.findOneById(ids[0])];
+        } else {
+          return await this.sensorRepository.findAllByIds(ids);
+        }
+
+      }
+
+      return [];
+
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode'])
+    }
+  }
 }

@@ -5,6 +5,7 @@ import { CreateOneSensorPayloadDto } from './dto/create-one-sensor_payload.dto';
 import { SensorPayloadRepository } from './repository/sensor_payload.repository';
 import { SensorService } from 'src/sensor/sensor.service';
 import { SENSOR_STATUS_ENUM } from 'src/enum';
+import { SensorEntity } from 'src/sensor/entities/sensor.entity';
 
 @Injectable()
 export class SensorPayloadService {
@@ -30,6 +31,12 @@ export class SensorPayloadService {
       const record = this.createRecord(dto);
       // sensor record를 수정
 
+      const existSensor: SensorEntity | undefined = await this.sensorService.findOneById(dto.serial_number);
+
+      if (!existSensor) {
+        throw new Error('존재하지 않는 시리얼번호 입니다.');
+      }
+
 
       const saveRecord = await this.sensorPayloadRepository.createOne(record)
       const updateRecord = await this.sensorService.updateOneById(saveRecord.serial_number, {
@@ -50,6 +57,16 @@ export class SensorPayloadService {
 
   async createMany(dtos: CreateOneSensorPayloadDto[]) {
     try {
+
+      const sensorIds: string[] = [...new Set(dtos.map(ele => ele.serial_number))]
+      console.log('SensorPayloadService createMAny sensorIds : ', sensorIds)
+
+      const existSensors = await this.sensorService.findAllByIds(sensorIds);
+
+
+      if (Array.isArray(existSensors) && !(existSensors.length == sensorIds.length)) {
+        throw new Error('존재하지 않는 시리얼번호 입니다.');
+      }
 
       let records = dtos.map(ele => this.createRecord(ele));
       const lastIndex: number = records.length - 1;
