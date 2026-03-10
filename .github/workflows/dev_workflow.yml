@@ -1,0 +1,70 @@
+# 워크플로우의 이름을 정의합니다. GitHub Actions 로그와 UI에서 이 이름이 표시됩니다.
+name: NestJS application test
+
+on:
+  push:
+    branches: [dev]
+
+jobs:
+  test:
+    # 워크플로우가 실행될 가상 환경을 지정합니다. 여기서는 Ubuntu 22.04를 사용합니다.
+    runs-on: ubuntu-22.04
+    # 워크플로우에서 실행할 단계들을 정의합니다.
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        # 두 번째 단계: Node.js 환경을 설정합니다.
+        with:
+          node-version: '24.14.0'
+          # Node.js의 버전을 지정합니다.
+          # 이 예시에서는 '20.10.0' 버전을 사용합니다.
+
+      - name: Install dependencies
+        run: |
+          npm install
+
+      - name: build project
+        run: |
+          npm run build
+
+      # - name: Run tests
+      #   run: |
+      #     npm test
+      # 네 번째 단계: 테스트를 실행합니다. (차후 구현)
+      # 'npm test' 명령어를 사용하여 정의된 테스트 케이스를 실행합니다.
+
+  deploy:
+    # 이 Job이 'test' Job이 완료된 후에 실행되도록 설정
+    needs: test
+    # Job 이름 정의
+    name: Deploy
+    # 이 Job을 실행할 환경 설정 (self-hosted 러너와 특정 레이블 사용.)
+    runs-on: [test-alon-backend]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      # 기존 Docker 컨테이너를 중지하고 삭제한 후, 새로운 이미지를 기반으로 컨테이너를 실행하는 단계
+      - name: Docker run. Stop test-alon-backend
+        run: docker stop test-alon-backend || true
+
+      - name: Docker run. Remove test-alon-backend
+        run: docker rm test-alon-backend || true
+
+      # Remove Docker Images
+      - name: Remove Docker images
+        run: docker rmi test-alon-backend:latest || true
+
+      # 🔥 로컬에서 직접 이미지 빌드
+      - name: Build Docker image locally
+        run: docker build -f Dockerfile.development -t test-alon-backend:latest .
+
+      # 🔥 새 컨테이너 실행
+      - name: Run new container
+        run: |
+          docker run -p 5010:3000 -d \
+          --name test-alon-backend \
+          --restart always \
+          --env-file /home/alex/coding/test/alon-testing/alon-testing_backend_env/.env \
+          --log-opt max-size=10m --log-opt max-file=3 \
+          test-alon-backend:latest
