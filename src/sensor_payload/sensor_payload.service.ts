@@ -33,7 +33,7 @@ export class SensorPayloadService {
       const saveRecord = await this.sensorPayloadRepository.createOne(record)
       const updateRecord = await this.sensorService.updateOneById(saveRecord.serial_number, {
         lastMode: saveRecord.mode,
-        lastTime: saveRecord.timestamp,
+        lastTime: saveRecord.createdAt,
         lastSensorPayloadId: saveRecord.id,
       })
 
@@ -67,7 +67,7 @@ export class SensorPayloadService {
 
       const updateRecord = await this.sensorService.updateOneById(saveRecords[0].serial_number, {
         lastMode: saveRecords[lastIndex].mode,
-        lastTime: saveRecords[lastIndex].timestamp,
+        lastTime: saveRecords[lastIndex].createdAt,
         lastSensorPayloadId: saveRecords[lastIndex].id,
       })
 
