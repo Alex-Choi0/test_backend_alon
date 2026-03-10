@@ -3,7 +3,12 @@ export enum OrderEnum {
   DESC = 'DESC'
 }
 
-export enum MODEENUM{
+export enum MODEENUM {
   NORMAL = 'NORMAL',
   EMERGENCY = 'EMERGENCY'
+}
+
+export enum SENSOR_STATUS_ENUM {
+  NORMAL = 'NORMAL',
+  MALFUNCTION = 'MALFUNCTION'
 }
