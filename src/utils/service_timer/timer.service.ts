@@ -46,8 +46,11 @@ export class TimerService {
 
     console.log('diffInMs : ', diffInMs);
 
-    // 밀리초를 일(days)로 변환
-    return Number(Math.round(diffInMs / 1000).toFixed(0));
+    const result = Number(Math.round(diffInMs / 1000).toFixed(0));
+
+    console.log("실제 시간차이 : ", result);
+
+    return result;
   }
 
   changeToUTC(datetime: string): string {

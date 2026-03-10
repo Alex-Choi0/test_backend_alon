@@ -7,6 +7,7 @@ import { SensorPayloadRepository } from './repository/sensor_payload.repository'
 import { SensorPayloadController } from './sensor_payload.controller';
 import { SensorPayloadService } from './sensor_payload.service';
 import { SensorModule } from 'src/sensor/sensor.module';
+import { SensorErrorModule } from 'src/sensor_error/sensor_error.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([SensorPayloadEntity]), ServerErrorModule, TimerModule, SensorModule],

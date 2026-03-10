@@ -6,9 +6,10 @@ import { SensorEntity } from './entities/sensor.entity';
 import { SensorRepository } from './repository/sensor.repository';
 import { SensorController } from './sensor.controller';
 import { SensorService } from './sensor.service';
+import { SensorErrorModule } from 'src/sensor_error/sensor_error.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([SensorEntity]), ServerErrorModule, TimerModule],
+  imports: [TypeOrmModule.forFeature([SensorEntity]), ServerErrorModule, TimerModule, SensorErrorModule],
   controllers: [SensorController],
   providers: [SensorService, SensorRepository],
   exports: [SensorService]
