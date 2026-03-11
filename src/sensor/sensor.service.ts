@@ -2,9 +2,11 @@ import { Inject, Injectable } from '@nestjs/common';
 import { ServerErrorService } from 'src/server_error/server_error.service';
 import { SensorColumns, SensorEntity } from './entities/sensor.entity';
 import { SensorRepository } from './repository/sensor.repository';
-import { MODEENUM, MODESELECT, OrderEnum, SENSOR_STATUS_ENUM, SENSOR_STATUS_SELECT } from 'src/enum';
+import { AVAILABLE_SELECT, MODEENUM, MODESELECT, OrderEnum, SENSOR_STATUS_ENUM, SENSOR_STATUS_SELECT } from 'src/enum';
 import { TimerService } from 'src/utils/service_timer/timer.service';
 import { SensorErrorService } from 'src/sensor_error/sensor_error.service';
+import { EmailService } from 'src/utils/service_email/email.service';
+import { NoticEmailService } from 'src/notic_email/notic_email.service';
 
 @Injectable()
 export class SensorService {
@@ -20,6 +22,12 @@ export class SensorService {
 
     @Inject(SensorErrorService)
     private readonly sensorErrorService: SensorErrorService,
+
+    @Inject(EmailService)
+    private readonly emailService: EmailService,
+
+    @Inject(NoticEmailService)
+    private readonly noticEmailService: NoticEmailService,
 
   ) { }
 
@@ -92,8 +100,7 @@ export class SensorService {
           const ids: string[] = [];
           malRecords.map(ele => ele.id).forEach(ele => ids.push(ele));
 
-
-          const updateSensorErrorAsy = this.sensorErrorService.create(malRecords.map((ele) => {
+          const sensorErrorArray = malRecords.map((ele) => {
             return {
               serial_number: ele.id,
               lastPayLoadId: ele.lastSensorPayloadId ? ele.lastSensorPayloadId : undefined,
@@ -101,16 +108,27 @@ export class SensorService {
               lastTime: ele.lastTime ? ele.lastTime : undefined,
               delay_sec: this.timerService.calculateSecondBetween(ele.updatedAt, new Date()),
             }
-          }))
+          })
+
+          const updateSensorErrorAsy = this.sensorErrorService.create(sensorErrorArray);
 
           const updateSensorAsy = this.sensorRepository.updateManyByIds(ids, { status: SENSOR_STATUS_ENUM.MALFUNCTION });
 
           await Promise.all([updateSensorErrorAsy, updateSensorAsy])
 
+          // 알림 유저들한테 이메일 전송
+          const malSensorSerial: string[] = sensorErrorArray.map(ele => ele.serial_number);
 
+          // 알림을 받아야 하는 유저 조회
+          const noticUsers = await this.noticEmailService.findAllByAvailable(AVAILABLE_SELECT.가능);
+
+          // 실제 보낼 유저가 있을 경우에만 메일을 보낸다. #29
+          if (Array.isArray(noticUsers) && noticUsers.length > 0) {
+            await this.emailService.sendManyEmails('센서 오작동 발생', `
+            오작동 발생 센서 시리얼 번호 : ${malSensorSerial}
+            `, noticUsers.map(ele => ele.email));
+          }
         }
-
-
       }
 
 

@@ -119,4 +119,18 @@ export class NoticEmailService {
     }
   }
 
+  async findAllByAvailable(availAbleType: AVAILABLE_SELECT = AVAILABLE_SELECT.가능) {
+    try {
+
+      return await this.noticEmailRepository.findAllByAvailable();
+
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(
+        this.errorLocation,
+        err['message'],
+        err['statusCode']
+      );
+    }
+  }
+
 }

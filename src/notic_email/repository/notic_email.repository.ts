@@ -57,4 +57,16 @@ export class NoticEmailRepository {
   async deleteOneById(id: number) {
     return await this.noticEmailEntity.delete(id);
   }
+
+  async findAllByAvailable(availAbleType: AVAILABLE_SELECT = AVAILABLE_SELECT.가능, order: OrderEnum = OrderEnum.DESC, orderColumn: NoticEmailColumns = NoticEmailColumns.id) {
+    const sql = this.noticEmailEntity.createQueryBuilder('record')
+      .where('1 = 1')
+      .orderBy(`record.${orderColumn}`, order);
+
+    if (availAbleType != AVAILABLE_SELECT.전체) {
+      sql.andWhere('record.available = :available', { available: availAbleType == AVAILABLE_SELECT.가능 });
+    }
+
+    return await sql.getMany();
+  }
 }

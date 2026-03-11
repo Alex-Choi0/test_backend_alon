@@ -14,9 +14,9 @@ export class EmailController {
     description: '테스트용 API. title, body, email을 입력해서 메일로 보낸다.',
   })
   async sendCheckEmail(@Body() dto: SendEmailDto) {
-    const mailOpt = this.emailService.mailOpt(dto.title, dto.body, dto.email);
+    const { title, body, email } = dto;
     return {
-      result: await this.emailService.sendingEmail(mailOpt),
+      result: await this.emailService.sendManyEmails(title, body, email),
       message: '전송완료',
     };
   }

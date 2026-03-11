@@ -3,7 +3,7 @@ import * as nodeMailer from 'nodemailer';
 
 @Injectable()
 export class EmailService {
-  async sendingEmail(mailOption) {
+  private async sendingEmail(mailOption) {
     const mailPoster = nodeMailer.createTransport({
       service: process.env.EMAIL_SERVICE,
       host: process.env.EMAIL_HOST,
@@ -66,5 +66,9 @@ export class EmailService {
     return mailOptions;
   }
 
+  async sendManyEmails(title: string, contents: string, to: string[]) {
+    const mailOpt = this.mailOpt(title, contents, to);
+    return this.sendingEmail(mailOpt);
+  }
 
 }
