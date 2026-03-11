@@ -2,6 +2,17 @@ import { MODEENUM } from "src/enum";
 import { SensorPayloadEntity } from "src/sensor_payload/entities/sensor_payload.entity";
 import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
+export enum SensorErrorColumns {
+  id = 'id',
+  serial_number = 'serial_number',
+  lastPayLoadId = 'lastPayLoadId',
+  lastMode = 'lastMode',
+  lastTime = 'lastTime',
+  delay_sec = 'delay_sec',
+  createdAt = 'createdAt',
+  updatedAt = 'updatedAt',
+}
+
 @Entity({
   name: 'sensor_error',
   comment: '센서의 에러를 기록한다.'

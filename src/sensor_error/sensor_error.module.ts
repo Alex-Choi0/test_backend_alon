@@ -5,9 +5,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SensorErrorEntity } from './entities/sensor_error.entity';
 import { SensorErrorRepository } from './repository/sensor_error.repository';
 import { ServerErrorModule } from 'src/server_error/server_error.module';
+import { TimerModule } from 'src/utils/service_timer/timer.module';
 
 @Module({
-  imports: [ServerErrorModule, TypeOrmModule.forFeature([SensorErrorEntity])],
+  imports: [ServerErrorModule, TypeOrmModule.forFeature([SensorErrorEntity]), TimerModule],
   controllers: [SensorErrorController],
   providers: [SensorErrorService, SensorErrorRepository],
   exports: [SensorErrorService]
