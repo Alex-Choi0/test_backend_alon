@@ -1,11 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Inject } from '@nestjs/common';
-import { SensorService } from './sensor.service';
-import { ServerErrorService } from 'src/server_error/server_error.service';
+import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
-import { CreateOneSensorDto } from './dto/create-one-sensor.dto';
 import { MODESELECT, OrderEnum, SENSOR_STATUS_SELECT } from 'src/enum';
-import { SensorPayloadColumns } from 'src/sensor_payload/entities/sensor_payload.entity';
-import { SensorColumns, SensorEntity } from './entities/sensor.entity';
+import { ServerErrorService } from 'src/server_error/server_error.service';
+import { CreateOneSensorDto } from './dto/create-one-sensor.dto';
+import { SensorColumns } from './entities/sensor.entity';
+import { SensorService } from './sensor.service';
 
 @ApiTags('센서를 등록하고 조회하는 API')
 @Controller('sensor')
@@ -167,7 +166,7 @@ export class SensorController {
     required: true
   })
   @ApiParam({
-    enum: SensorPayloadColumns,
+    enum: SensorColumns,
     name: 'orderColumn',
     description: '정렬할 컬럼',
     example: SensorColumns.id,

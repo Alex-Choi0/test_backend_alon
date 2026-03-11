@@ -1,7 +1,9 @@
-import { Controller, Get, Inject } from '@nestjs/common';
-import { StatisticsService } from './statistics.service';
+import { Body, Controller, Get, HttpCode, Inject, Param, Post } from '@nestjs/common';
+import { ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
+import { MODESELECT } from 'src/enum';
+import { FindManySensorPayload } from 'src/sensor_payload/dto/find-many-sensor_payload.dto';
 import { ServerErrorService } from 'src/server_error/server_error.service';
-import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { StatisticsService } from './statistics.service';
 
 @Controller('statistics')
 export class StatisticsController {
@@ -40,6 +42,89 @@ export class StatisticsController {
     try {
 
       return await this.statisticsService.getTotalSensorStatus();
+
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode'])
+    }
+  }
+
+  @Post('39/sensor-data/avg/mid/:sensorStartDate/:sensorEndDate/:modeSelect/:order/:orderColumn')
+  @ApiOperation({
+    summary: 'timestamp기준으로 각각의 데이터 평균과 중앙값을 응답 #39',
+    description: '센서에서 작성된 시간(timestamp)기준으로 조회, 데이터(온도, 습도, 기압, 공기질)의 평균과 중위값을 응답한다. 1개의 시리얼 번호 또는 복수의 시리얼 번호로 선택이 가능하며 빈배열일시 시리얼 번호와 관계없이 해당기간의 평균을 응답한다.'
+  })
+  @ApiParam({
+    name: 'sensorStartDate',
+    description: '센서가 서버로 요청한 시작시간(timestamp)을 입력. 없을시 "-"입력. sensorStartDate 또는 sensorEndDate값이 "-"일 경우 센서 수집기간을 포함해서 조회하지 않는다.',
+    type: String,
+    example: '2024-05-22T08:30:00+09:00',
+    required: true
+  })
+  @ApiParam({
+    name: 'sensorEndDate',
+    description: '센서가 서버로 요청한 끝나는 시간(timestamp)을 입력. 없을시 "-"입력. sensorStartDate 또는 sensorEndDate값이 "-"일 경우 센서 수집기간을 포함해서 조회하지 않는다.',
+    type: String,
+    example: '2024-05-24T08:30:00+09:00',
+    required: true
+  })
+  @ApiParam({
+    enum: MODESELECT,
+    name: 'modeSelect',
+    description: '조회할 모드. 전체로 선택하면 모드 상관없이 전체를 조회한다.',
+    example: MODESELECT.전체,
+    required: true
+  })
+  @ApiOkResponse({
+    description: `정상적으로 응답시 \n
+    {
+      "temperature": { // 온도
+        "avg": 평균값,
+        "median": 중앙값
+      },
+      "humidity": { // 습도
+        "avg": 평균값,
+        "median": 중앙값
+      },
+      "pressure": { // 기압
+        "avg": 평균값,
+        "median": 중앙값
+      },
+      "airQuality": { // 공기질
+        "avg": 평균값,
+        "median": 중앙값
+      }
+    }
+    `,
+    example: {
+      "temperature": {
+        "avg": 26.833333333333332,
+        "median": 25.5
+      },
+      "humidity": {
+        "avg": 50.20000000000001,
+        "median": 50.2
+      },
+      "pressure": {
+        "avg": 1013.2000000000002,
+        "median": 1013.2
+      },
+      "airQuality": {
+        "avg": 42,
+        "median": 42
+      }
+    }
+  })
+  @HttpCode(200)
+  async getSensorDataAvgMidData(
+    @Param('sensorStartDate') sensorStartDate: string,
+    @Param('sensorEndDate') sensorEndDate: string,
+    @Param('modeSelect') modeSelect: MODESELECT,
+    @Body() dto: FindManySensorPayload
+  ) {
+    try {
+
+      return await this.statisticsService.getSensorDataAvgMidData(sensorStartDate, sensorEndDate, dto.serial_numbers, modeSelect)
+
 
     } catch (err) {
       await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode'])

@@ -1,6 +1,6 @@
 import { InjectRepository } from "@nestjs/typeorm";
-import { MODEENUM, MODESELECT, OrderEnum } from "src/enum";
-import { Or, Repository } from "typeorm";
+import { MODESELECT, OrderEnum } from "src/enum";
+import { Repository } from "typeorm";
 import { SensorPayloadColumns, SensorPayloadEntity } from "../entities/sensor_payload.entity";
 
 export class SensorPayloadRepository {
@@ -61,6 +61,73 @@ export class SensorPayloadRepository {
         }
 
         return await sql.getManyAndCount();
-
     }
+
+    async getAvgMidData(
+        sensorStartDate: string,
+        sensorEndDate: string,
+        serial_numbers: string[] = [],
+        modeSelect: MODESELECT = MODESELECT.전체
+    ): Promise<{ [key: string]: { avg: number, median: number } }> {
+
+        const sql = this.sensorPayloadEntity
+            .createQueryBuilder('record')
+            .select([
+                `AVG(record.temperature)::float as temperature_avg`,
+                `AVG(record.humidity)::float as humidity_avg`,
+                `AVG(record.pressure)::float as pressure_avg`,
+                `AVG(record."airQuality")::float as air_quality_avg`,
+
+                `percentile_cont(0.5) WITHIN GROUP (ORDER BY record.temperature) as temperature_median`,
+                `percentile_cont(0.5) WITHIN GROUP (ORDER BY record.humidity) as humidity_median`,
+                `percentile_cont(0.5) WITHIN GROUP (ORDER BY record.pressure) as pressure_median`,
+                `percentile_cont(0.5) WITHIN GROUP (ORDER BY record."airQuality") as air_quality_median`
+            ])
+            .where('1=1');
+
+        if (serial_numbers.length > 0) {
+            if (serial_numbers.length === 1) {
+                sql.andWhere('record.serial_number = :serial_number', {
+                    serial_number: serial_numbers[0]
+                });
+            } else {
+                sql.andWhere('record.serial_number IN(:...serial_numbers)', {
+                    serial_numbers
+                });
+            }
+        }
+
+        if (sensorStartDate != '-' && sensorEndDate != '-') {
+            sql.andWhere(
+                'record.timestamp BETWEEN :sensorStartDate AND :sensorEndDate',
+                { sensorStartDate, sensorEndDate }
+            );
+        }
+
+        if (modeSelect != MODESELECT.전체) {
+            sql.andWhere('record.mode = :mode', { mode: modeSelect });
+        }
+
+        const result = await sql.getRawOne();
+
+        return {
+            temperature: {
+                avg: Number(result.temperature_avg),
+                median: Number(result.temperature_median)
+            },
+            humidity: {
+                avg: Number(result.humidity_avg),
+                median: Number(result.humidity_median)
+            },
+            pressure: {
+                avg: Number(result.pressure_avg),
+                median: Number(result.pressure_median)
+            },
+            airQuality: {
+                avg: Number(result.air_quality_avg),
+                median: Number(result.air_quality_median)
+            }
+        };
+    }
+
 }
