@@ -72,8 +72,8 @@ export class SensorController {
 
   @Get('18/find/many/:startDate/:endDate/:sensorStartDate/:sensorEndDate/:skip/:take/:id/:name/:model/:manufacturer/:lastModeSelect/:statusSelect/:order/:orderColumn')
   @ApiOperation({
-    summary: '수집받은 데이터를 옵션에 따라 조회한다. #17',
-    description: '수집받은 데이터를 조건에 따라 조회한다.'
+    summary: '센서를 조건에따라 조회한다. #18',
+    description: '센서를 조건에따라 조회한다.'
   })
   @ApiParam({
     name: 'startDate',
@@ -175,22 +175,30 @@ export class SensorController {
   })
   @ApiOkResponse({
     description: `정상적으로 응답시 \n
-    [
       [
-        {
-          "id": 센서 수집 ID,
-          "id": 센서 시리얼 번호,
-          "timestamp": 센서에 의해 작성된 시간(UTC),
-          "mode": 센서모드,
-          "temperature": 온도,
-          "humidity": 습도,
-          "pressure": 기압,
-          "locationLat": 위도,
-          "locationLng": 경도,
-          "airQuality": 공기질 지수,
-          "createdAt": 서버에 의해 해당 레코드가 생성된 시간(UTC),
-          "updatedAt": 서버에 의해 해당 레코드가 업데이트 된 시간(UTC)
-        }
+        "id": 센서의 시리얼 번호,
+        "name": 센서 이름,
+        "model": 센서 모델명,
+        "manufacturer": 센서의 제조사,
+        "lastMode": 센서의 마지막 모드,
+        "lastTime": 센서의 마지막 데이터 시간,
+        "lastSensorPayloadId": 서버에서 센서의 데이터를 수집한 마지막 ID,
+        "status": 현재 센서 상태,
+        "createdAt": 서버에서 생성한 레코드 시간,
+        "updatedAt": 서버에서 수정한 레코드 시간,
+        "lastSensorPayload": {
+            "id": 센서 시리얼 번호,
+            "timestamp": 센서에 의해 작성된 시간(UTC),
+            "mode": 센서모드,
+            "temperature": 온도,
+            "humidity": 습도,
+            "pressure": 기압,
+            "locationLat": 위도,
+            "locationLng": 경도,
+            "airQuality": 공기질 지수,
+            "createdAt": 서버에 의해 해당 레코드가 생성된 시간(UTC),
+            "updatedAt": 서버에 의해 해당 레코드가 업데이트 된 시간(UTC)
+          }
       ],
       해당 조건으로 조회시 총 갯수
     ]
@@ -199,20 +207,33 @@ export class SensorController {
       example: [
         [
           {
-            "id": "SANSOR-A-1005",
-            "timestamp": "2024-05-22T23:40:00.000Z",
-            "mode": "NORMAL",
-            "temperature": 24.5,
-            "humidity": 50.2,
-            "pressure": 1013.2,
-            "locationLat": 37.5665,
-            "locationLng": 126.978,
-            "airQuality": 2,
-            "createdAt": "2026-03-10T17:17:40.255Z",
-            "updatedAt": "2026-03-10T17:17:40.255Z"
+            "id": "SANSOR-A-1004",
+            "name": null,
+            "model": null,
+            "manufacturer": null,
+            "lastMode": "EMERGENCY",
+            "lastTime": "2026-03-10T23:49:01.516Z",
+            "lastSensorPayloadId": 3,
+            "status": "MALFUNCTION",
+            "createdAt": "2026-03-10T23:49:01.525Z",
+            "updatedAt": "2026-03-10T23:49:20.006Z",
+            "lastSensorPayload": {
+              "id": 3,
+              "serial_number": "SANSOR-A-1004",
+              "timestamp": "2024-05-22T23:30:00.000Z",
+              "mode": "EMERGENCY",
+              "temperature": 24.5,
+              "humidity": 50.2,
+              "pressure": 1013.2,
+              "locationLat": 37.5665,
+              "locationLng": 126.978,
+              "airQuality": 42,
+              "createdAt": "2026-03-10T23:49:01.516Z",
+              "updatedAt": "2026-03-10T23:49:01.516Z"
+            }
           }
         ],
-        10
+        1
       ]
     }
   })
