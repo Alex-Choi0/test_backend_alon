@@ -31,15 +31,20 @@ export class SensorPayloadRepository {
         return await sql.getManyAndCount();
     }
 
-    async findManyByOptions(startDate: string, endDate: string, sensorStartDate: string, sensorEndDate: string, skip: number, take: number, serial_number: string, mode: MODESELECT = MODESELECT.전체, order: OrderEnum = OrderEnum.DESC, orderColumn: SensorPayloadColumns = SensorPayloadColumns.id) {
+    async findManyByOptions(startDate: string, endDate: string, sensorStartDate: string, sensorEndDate: string, skip: number, take: number, serial_numbers: string[], mode: MODESELECT = MODESELECT.전체, order: OrderEnum = OrderEnum.DESC, orderColumn: SensorPayloadColumns = SensorPayloadColumns.id) {
         const sql = this.sensorPayloadEntity.createQueryBuilder('record')
             .where('1=1')
             .skip(skip)
             .take(take)
             .orderBy(`record.${orderColumn}`, order);
 
-        if (serial_number != '-') {
-            sql.andWhere('record.serial_number = :serial_number', { serial_number });
+        if (serial_numbers.length > 0) {
+            console.log("SensorPayloadRepository findManyByOptions serial_numbers : ", serial_numbers);
+            if (serial_numbers.length == 1) {
+                sql.andWhere('record.serial_number = :serial_numbers', { serial_numbers: serial_numbers[0] });
+            } else {
+                sql.andWhere('record.serial_number IN(:...serial_numbers)', { serial_numbers });
+            }
         }
 
         if (startDate != '-' && endDate != '-') {

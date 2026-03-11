@@ -125,7 +125,7 @@ export class SensorPayloadService {
     return { ...dto, timestamp, locationLat, locationLng, airQuality };
   }
 
-  async findManyByOption(startDate: string, endDate: string, sensorStartDate: string, sensorEndDate: string, skip: number, take: number, serial_number: string, mode: MODESELECT = MODESELECT.전체) {
+  async findManyByOption(startDate: string, endDate: string, sensorStartDate: string, sensorEndDate: string, skip: number, take: number, serial_numbers: string[], mode: MODESELECT = MODESELECT.전체) {
     try {
 
       // startDate, endDate, sensorStartDate, sensorEndDate 검증 및 UTC시간으로 변환
@@ -134,7 +134,7 @@ export class SensorPayloadService {
       sensorStartDate = sensorStartDate == '-' ? sensorStartDate : this.timerService.changeToUTC(sensorStartDate);
       sensorEndDate = sensorEndDate == '-' ? sensorEndDate : this.timerService.changeToUTC(sensorEndDate);
 
-      return await this.sensorPayloadRepository.findManyByOptions(startDate, endDate, sensorStartDate, sensorEndDate, skip, take, serial_number, mode);
+      return await this.sensorPayloadRepository.findManyByOptions(startDate, endDate, sensorStartDate, sensorEndDate, skip, take, serial_numbers, mode);
 
     } catch (err) {
       await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode'])

@@ -1,10 +1,11 @@
-import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Inject, Param, Post } from '@nestjs/common';
 import { ApiBody, ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags, getSchemaPath } from '@nestjs/swagger';
 import { ServerErrorService } from 'src/server_error/server_error.service';
 import { CreateOneSensorPayloadDto } from './dto/create-one-sensor_payload.dto';
 import { SensorPayloadService } from './sensor_payload.service';
 import { MODESELECT, OrderEnum } from 'src/enum';
 import { SensorPayloadColumns } from './entities/sensor_payload.entity';
+import { FindManySensorPayload } from './dto/find-many-sensor_payload.dto';
 
 @ApiTags('센서 데이터를 수집하고 조회하는 API')
 @Controller('sensor-payload')
@@ -152,7 +153,7 @@ export class SensorPayloadController {
     }
   }
 
-  @Get('17/find/many/:startDate/:endDate/:sensorStartDate/:sensorEndDate/:skip/:take/:serial_number/:modeSelect/:order/:orderColumn')
+  @Post('17/find/many/:startDate/:endDate/:sensorStartDate/:sensorEndDate/:skip/:take/:modeSelect/:order/:orderColumn')
   @ApiOperation({
     summary: '수집받은 데이터를 옵션에 따라 조회한다. #17',
     description: '수집받은 데이터를 조건에 따라 조회한다.'
@@ -197,13 +198,6 @@ export class SensorPayloadController {
     name: 'take',
     description: '불러올 record. 5이면 skip을 제와한 다음의 조회값 5개를 불러온다.',
     example: 5,
-    required: true
-  })
-  @ApiParam({
-    type: String,
-    name: 'serial_number',
-    description: '조회할 시리얼 번호. "-" 입력시 시리얼 번호와 관계없이 조회',
-    example: 'SANSOR-A-1005',
     required: true
   })
   @ApiParam({
@@ -271,6 +265,7 @@ export class SensorPayloadController {
       ]
     }
   })
+  @HttpCode(200) // 레코드를 생성하지 않기 때문에 200응답
   async findManyByOption(
     @Param('startDate') startDate: string,
     @Param('endDate') endDate: string,
@@ -278,12 +273,14 @@ export class SensorPayloadController {
     @Param('sensorEndDate') sensorEndDate: string,
     @Param('skip') skip: number,
     @Param('take') take: number,
-    @Param('serial_number') serial_number: string,
     @Param('modeSelect') modeSelect: MODESELECT,
+    @Body() dto: FindManySensorPayload
   ) {
     try {
 
-      return await this.sensorPayloadService.findManyByOption(startDate, endDate, sensorStartDate, sensorEndDate, skip, take, serial_number, modeSelect);
+      const serial_numbers = dto.serial_numbers;
+
+      return await this.sensorPayloadService.findManyByOption(startDate, endDate, sensorStartDate, sensorEndDate, skip, take, serial_numbers, modeSelect);
 
 
     } catch (err) {
