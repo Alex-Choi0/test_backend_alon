@@ -84,7 +84,9 @@ $ ./development_down.sh
 
 - 과제 GitHub - [링크](https://github.com/Alex-Choi0/test_backend_alon)
 - 배포 웹사이트 - [링크](https://alon-test-backend.alex-choi.com/api-docs)
+- 데이터베이스 스키마 - [링크](https://dbdiagram.io/d/test_alon_schema-69ad5e80a44dc25f8b423993)
 - 아론 백엔드 과제 개발문서 - [링크](https://docs.google.com/document/d/1cLCWiyr29opcE1YZENhP0E3IZSs50d1uHPjERNZptM8/edit?usp=sharing)
+- 참고 기술 블로그 - [링크](https://engineeringshw.blogspot.com/)
 
 ## License
 

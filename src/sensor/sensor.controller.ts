@@ -7,7 +7,7 @@ import { MODESELECT, OrderEnum, SENSOR_STATUS_SELECT } from 'src/enum';
 import { SensorPayloadColumns } from 'src/sensor_payload/entities/sensor_payload.entity';
 import { SensorColumns, SensorEntity } from './entities/sensor.entity';
 
-@ApiTags('센서를 증록하고 조회하는 API')
+@ApiTags('센서를 등록하고 조회하는 API')
 @Controller('sensor')
 export class SensorController {
   constructor(
