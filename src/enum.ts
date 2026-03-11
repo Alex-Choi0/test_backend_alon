@@ -32,3 +32,10 @@ export enum AVAILABLE_SELECT {
   가능 = '가능',
   불가능 = '불가능'
 }
+
+export enum DATE_TYPE {
+  일 = '일',
+  주 = '주',
+  월 = '월',
+  년 = '년'
+}

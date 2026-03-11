@@ -9,6 +9,7 @@ export enum SensorColumns {
     manufacturer = 'manufacturer',
     lastMode = 'lastMode',
     lastTime = 'lastTime',
+    status = 'status',
     createdAt = 'createdAt',
     updatedAt = 'updatedAt'
 }
