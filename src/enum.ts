@@ -26,3 +26,9 @@ export enum SENSOR_STATUS_SELECT {
   NORMAL = 'NORMAL', // 동작상태
   MALFUNCTION = 'MALFUNCTION' // 동작이 잘못된 상태
 }
+
+export enum AVAILABLE_SELECT {
+  전체 = '전체',
+  가능 = '가능',
+  불가능 = '불가능'
+}

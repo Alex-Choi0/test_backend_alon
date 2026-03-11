@@ -9,6 +9,7 @@ import { SensorModule } from './sensor/sensor.module';
 import { SensorPayloadModule } from './sensor_payload/sensor_payload.module';
 import { ScheduleProcessModule } from './schedule_process/schedule_process.module';
 import { SensorErrorModule } from './sensor_error/sensor_error.module';
+import { NoticEmailModule } from './notic_email/notic_email.module';
 
 @Module({
   imports: [
@@ -34,7 +35,8 @@ import { SensorErrorModule } from './sensor_error/sensor_error.module';
     SensorModule,
     SensorPayloadModule,
     ScheduleProcessModule,
-    SensorErrorModule
+    SensorErrorModule,
+    NoticEmailModule
   ],
   controllers: [AppController],
   providers: [AppService],
