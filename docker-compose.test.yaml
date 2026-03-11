@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 networks:
   # 해당 도커 컴포즈로 실행한 컨테이너는 동일한 네트워크를 공유한다.
   backend_network:
@@ -13,7 +13,7 @@ services:
       context: ./
       dockerfile: Dockerfile.dev
     ports:
-      - "3000:3000"
+      - '${DOCKER_PORT}:3000'
     #개발용이기 때문에 코드수정이 있으면 컨테이너에서도 반영
     volumes:
       - ./src:/nestjs/src
@@ -23,10 +23,10 @@ services:
     env_file:
       - ./.env
     logging:
-      driver: "json-file"
+      driver: 'json-file'
       options:
-        max-file: "3"
-        max-size: "10m"
+        max-file: '3'
+        max-size: '10m'
   postgres:
     container_name: alon_database_postgres
     image: 'postgres:12'
