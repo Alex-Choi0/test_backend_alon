@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { SensorColumns, SensorEntity } from "../entities/sensor.entity";
 import { Repository } from "typeorm";
-import { OrderEnum, SENSOR_STATUS_ENUM } from "src/enum";
+import { MODESELECT, OrderEnum, SENSOR_STATUS_ENUM, SENSOR_STATUS_SELECT } from "src/enum";
 
 @Injectable()
 export class SensorRepository {
@@ -27,15 +27,6 @@ export class SensorRepository {
             .where('record.id = :id', { id })
 
         return await sql.getOne();
-    }
-
-    findManySql(startDate: string, endDate: string, skip: number = 0, take: number = 10) {
-        const sql = this.sensorEntity.createQueryBuilder('record')
-            .where('record.createdAt BETWEEN :startDate AND :endDate', { startDate, endDate })
-            .skip(skip)
-            .take(take);
-
-        return sql;
     }
 
     // 등록된 센서 조회
@@ -98,6 +89,65 @@ export class SensorRepository {
             sql.where('id IN(:...ids)', { ids })
         }
         return await sql.getMany();
+    }
+
+    async findManyByOption(
+        id: string,
+        name: string,
+        model: string,
+        manufacturer: string,
+        startDate: string,
+        endDate: string,
+        sensorStartDate: string,
+        sensorEndDate: string,
+        skip: number,
+        take: number,
+        lastModeSelect: MODESELECT = MODESELECT.전체,
+        statusSelect: SENSOR_STATUS_SELECT = SENSOR_STATUS_SELECT.전체,
+        order: OrderEnum = OrderEnum.DESC,
+        orderColumn: SensorColumns = SensorColumns.id
+    ) {
+        const sql = this.sensorEntity.createQueryBuilder('record')
+            .leftJoinAndSelect('record.lastSensorPayload', 'payload')
+            .where('1=1')
+            .skip(skip)
+            .take(take)
+            .orderBy(`record.${orderColumn}`, order)
+
+        if (id != '-') {
+            sql.andWhere('record.id = :id', { id });
+        }
+
+        if (name != '-') {
+            sql.andWhere('record.name = :name', { name });
+        }
+
+        if (model != '-') {
+            sql.andWhere('record.model = :model', { name });
+        }
+
+        if (manufacturer != '-') {
+            sql.andWhere('record.manufacturer = :manufacturer', { manufacturer });
+        }
+
+        if (startDate != '-' && endDate != '-') {
+            sql.andWhere('record.createdAt BETWEEN :startDate AND :endDate', { startDate, endDate });
+        }
+
+        if (sensorStartDate != '-' && sensorEndDate != '-') {
+            sql.andWhere('record.timestamp BETWEEN :sensorStartDate AND :sensorEndDate', { sensorStartDate, sensorEndDate });
+        }
+
+        if (lastModeSelect != MODESELECT.전체) {
+            sql.andWhere('record.lastMode = :lastMode', { lastMode: lastModeSelect })
+        }
+
+        if (statusSelect != SENSOR_STATUS_SELECT.전체) {
+            sql.andWhere('record.status = :status', { status: statusSelect })
+        }
+
+        return await sql.getManyAndCount();
+
 
     }
 

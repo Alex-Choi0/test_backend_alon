@@ -1,5 +1,6 @@
 import { MODEENUM, SENSOR_STATUS_ENUM } from "src/enum";
-import { Column, CreateDateColumn, Entity, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { SensorPayloadEntity } from "src/sensor_payload/entities/sensor_payload.entity";
+import { Column, CreateDateColumn, Entity, JoinColumn, OneToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 export enum SensorColumns {
     id = 'id',
@@ -32,7 +33,7 @@ export class SensorEntity {
     @Column({ type: 'enum', enum: MODEENUM, nullable: true, comment: '마지막 모드' })
     lastMode: MODEENUM | null;
 
-    @Column({ type: 'timestamp with time zone', nullable: true, comment: '마지막 센서기준 데이터생성시간(UTC로 통일)' })
+    @Column({ type: 'timestamp with time zone', nullable: true, comment: '마지막 서버에서 수신받아서 데이터생성시간(UTC로 통일)' })
     lastTime: Date | null;
 
     @Column({ type: 'int', nullable: true, comment: '마지막 센서 기록ID' })
@@ -52,5 +53,11 @@ export class SensorEntity {
         comment: '레코드 업데이트 날짜',
     })
     updatedAt: Date;
+
+    @OneToOne(() => SensorPayloadEntity, (payload) => payload, {
+        onDelete: 'CASCADE'
+    })
+    @JoinColumn({ name: 'lastSensorPayloadId' })
+    lastSensorPayload: SensorPayloadEntity
 
 }

@@ -1,7 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ServerErrorService } from 'src/server_error/server_error.service';
 import { SensorErrorRepository } from './repository/sensor_error.repository';
-import { SensorErrorEntity } from './entities/sensor_error.entity';
+import { SensorErrorColumns, SensorErrorEntity } from './entities/sensor_error.entity';
+import { MODESELECT, OrderEnum } from 'src/enum';
+import { TimerService } from 'src/utils/service_timer/timer.service';
 
 @Injectable()
 export class SensorErrorService {
@@ -11,6 +13,9 @@ export class SensorErrorService {
 
     @Inject(SensorErrorRepository)
     private readonly sensorErrorRepository: SensorErrorRepository,
+
+    @Inject(TimerService)
+    private readonly timerService: TimerService
 
   ) { }
 
@@ -28,6 +33,44 @@ export class SensorErrorService {
       }
 
       return null;
+
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode']);
+    }
+  }
+
+  async findManyByOptions(
+    serial_number: string,
+    startDate: string,
+    endDate: string,
+    sensorStartDate: string,
+    sensorEndDate: string,
+    skip: number,
+    take: number,
+    lastModeSelect: MODESELECT = MODESELECT.전체,
+    order: OrderEnum = OrderEnum.DESC,
+    orderColumn: SensorErrorColumns = SensorErrorColumns.id
+  ) {
+    try {
+
+      // startDate, endDate, sensorStartDate, sensorEndDate 검증 및 UTC시간으로 변환
+      startDate = startDate == '-' ? startDate : this.timerService.changeToUTC(startDate);
+      endDate = endDate == '-' ? endDate : this.timerService.changeToUTC(endDate);
+      sensorStartDate = sensorStartDate == '-' ? sensorStartDate : this.timerService.changeToUTC(sensorStartDate);
+      sensorEndDate = sensorEndDate == '-' ? sensorEndDate : this.timerService.changeToUTC(sensorEndDate);
+
+      return await this.sensorErrorRepository.findManyByOptions(
+        serial_number,
+        startDate,
+        endDate,
+        sensorStartDate,
+        sensorEndDate,
+        skip,
+        take,
+        lastModeSelect,
+        order,
+        orderColumn
+      )
 
     } catch (err) {
       await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode']);
