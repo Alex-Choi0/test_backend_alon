@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, Patch, Post } from '@nestjs/common';
 import { NoticEmailService } from './notic_email.service';
 import { ServerErrorService } from 'src/server_error/server_error.service';
 import { ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
@@ -288,6 +288,28 @@ export class NoticEmailController {
     } catch (err) {
       await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode']);
     }
+  }
+
+  @Delete('27/delete/one/:id')
+  @ApiOperation({
+    summary: '하나의 유저를 삭제한다. #27',
+    description: '하나의 유저를 ID로 삭제한다.'
+  })
+  @ApiParam({
+    name: 'id',
+    description: '삭제할 유저ID',
+    example: 2,
+    required: true
+  })
+  async deleteOneById(@Param('id') id: number) {
+    try {
+
+      return await this.noticEmailService.deleteOneById(id);
+
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode']);
+    }
+
   }
 
 
