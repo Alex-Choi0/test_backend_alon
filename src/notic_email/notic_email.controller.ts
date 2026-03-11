@@ -1,8 +1,9 @@
-import { Body, Controller, Inject, Post } from '@nestjs/common';
+import { Body, Controller, Inject, Param, Patch, Post } from '@nestjs/common';
 import { NoticEmailService } from './notic_email.service';
 import { ServerErrorService } from 'src/server_error/server_error.service';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { CreateOneNoticEmailDto } from './dto/create-one-notic_email.dto';
+import { UpdateOneNoticEmailDto } from './dto/update-one-notic_email.dto';
 
 @ApiTags('알람 이메일 API')
 @Controller('notic-email')
@@ -55,5 +56,48 @@ export class NoticEmailController {
       await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode'])
     }
   }
+
+  @Patch('23/update/one/id/:id')
+  @ApiOperation({
+    summary: '한명의 유저를 수정한다. #23',
+    description: '한명의 유저를 ID로 수정한다.'
+  })
+  @ApiParam({
+    name: 'id',
+    description: '수정할 유저ID',
+    example: 1,
+    required: true
+  })
+  async updateOneById(@Param('id') id: number, @Body() dto: UpdateOneNoticEmailDto) {
+    try {
+
+      return await this.noticEmailService.updateOneById(id, dto);
+
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode']);
+    }
+  }
+
+  @Patch('23/update/one/email/:email')
+  @ApiOperation({
+    summary: '한명의 유저를 수정한다. #23',
+    description: '한명의 유저를 email로 수정한다.'
+  })
+  @ApiParam({
+    name: 'email',
+    description: '수정할 유저 Email',
+    example: 'alex@gmail.com',
+    required: true
+  })
+  async updateOneByEmail(@Param('email') email: string, @Body() dto: UpdateOneNoticEmailDto) {
+    try {
+
+      return await this.noticEmailService.updateOneByEmail(email, dto);
+
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode']);
+    }
+  }
+
 
 }
