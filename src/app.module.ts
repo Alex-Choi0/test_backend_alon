@@ -11,6 +11,7 @@ import { ScheduleProcessModule } from './schedule_process/schedule_process.modul
 import { SensorErrorModule } from './sensor_error/sensor_error.module';
 import { NoticEmailModule } from './notic_email/notic_email.module';
 import { EmailModule } from './utils/service_email/email.module';
+import { StatisticsModule } from './statistics/statistics.module';
 
 @Module({
   imports: [
@@ -38,7 +39,8 @@ import { EmailModule } from './utils/service_email/email.module';
     ScheduleProcessModule,
     SensorErrorModule,
     NoticEmailModule,
-    EmailModule
+    EmailModule,
+    StatisticsModule
   ],
   controllers: [AppController],
   providers: [AppService],

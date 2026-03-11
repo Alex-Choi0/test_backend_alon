@@ -151,4 +151,33 @@ export class SensorRepository {
 
     }
 
+    async getTotalStatus() {
+        const sql = this.sensorEntity.createQueryBuilder('record')
+            .select([
+                `COUNT(CASE WHEN record.status = 'STANDBY' THEN 1 END) as standby`,
+                `COUNT(CASE WHEN record.status = 'NORMAL' THEN 1 END) as normal`,
+                `COUNT(CASE WHEN record.status = 'MALFUNCTION' THEN 1 END) as malfunction`
+            ])
+        // .select('record.status', 'status')
+        // .addSelect('COUNT(record.id)', 'count')
+        // .groupBy('record.status');
+
+        const record = await sql.getRawOne();
+
+        console.log("SensorRepository getTotalStatus record : ", record);
+
+        return {
+            standby: Number(record.standby),
+            normal: Number(record.normal),
+            malfunction: Number(record.malfunction),
+        };
+
+        // return records.map(ele => {
+        //     return {
+        //         status: ele['status'],
+        //         count: Number(ele['count'])
+        //     }
+        // })
+    }
+
 }

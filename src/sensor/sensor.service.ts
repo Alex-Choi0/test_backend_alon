@@ -264,4 +264,14 @@ export class SensorService {
       await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode']);
     }
   }
+
+  async getTotalStatus() {
+    try {
+
+      return await this.sensorRepository.getTotalStatus();
+
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode']);
+    }
+  }
 }
