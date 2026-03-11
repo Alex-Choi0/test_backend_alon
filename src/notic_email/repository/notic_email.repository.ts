@@ -27,6 +27,10 @@ export class NoticEmailRepository {
     return await this.noticEmailEntity.findOneBy({ email });
   }
 
+  async findOneById(id: number) {
+    return await this.noticEmailEntity.findOneBy({ id });
+  }
+
   async findManyOptions(keyword: string, skip: number, take: number, availableType: AVAILABLE_SELECT = AVAILABLE_SELECT.전체, order: OrderEnum = OrderEnum.DESC, orderColumn: NoticEmailColumns = NoticEmailColumns.id) {
     const sql = this.noticEmailEntity.createQueryBuilder('record')
       .where('1 = 1')

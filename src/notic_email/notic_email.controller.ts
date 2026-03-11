@@ -198,5 +198,97 @@ export class NoticEmailController {
     }
   }
 
+  @Get('26/find/one/email/:email')
+  @ApiOperation({
+    summary: '한명의 유저이메일에 대해서 조회한다. #26',
+    description: '한명의 유저를 조회하고 존재유무를 확인'
+  })
+  @ApiParam({
+    name: 'email',
+    description: '유저의 이메일로 조회',
+    type: String,
+    example: 'choijeaho86@gmail.com',
+    required: true
+  })
+  @ApiOkResponse({
+    description: `정상적으로 응답시\n
+    {
+      "id": 유저ID,
+      "email": 유저이메일,
+      "name": 유저이름,
+      "mobile": 유저 모바일,
+      "available": 알림 가능여부(true일시 알림이 전송),
+      "createdAt": 서버에서 생성한 레코드 시간,
+      "updatedAt": 서버에서 업데이트한 레코드 시간
+    }
+    `,
+    schema: {
+      example: {
+        "id": 1,
+        "email": "choijeaho86@gmail.com",
+        "name": "Alex",
+        "mobile": "01012345678",
+        "available": true,
+        "createdAt": "2026-03-11T03:25:54.049Z",
+        "updatedAt": "2026-03-11T03:25:54.049Z"
+      }
+    }
+  })
+  async findOneByEmail(@Param('email') email: string) {
+    try {
+
+      return await this.noticEmailService.findOneByEmail(email);
+
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode']);
+    }
+  }
+
+  @Get('26/find/one/id/:id')
+  @ApiOperation({
+    summary: '한명의 유저ID에 대해서 조회한다. #26',
+    description: '한명의 유저를 조회하고 존재유무를 확인'
+  })
+  @ApiParam({
+    name: 'id',
+    description: '유저의 ID로 조회',
+    example: 1,
+    type: Number,
+    required: true
+  })
+  @ApiOkResponse({
+    description: `정상적으로 응답시\n
+    {
+      "id": 유저ID,
+      "email": 유저이메일,
+      "name": 유저이름,
+      "mobile": 유저 모바일,
+      "available": 알림 가능여부(true일시 알림이 전송),
+      "createdAt": 서버에서 생성한 레코드 시간,
+      "updatedAt": 서버에서 업데이트한 레코드 시간
+    }
+    `,
+    schema: {
+      example: {
+        "id": 1,
+        "email": "choijeaho86@gmail.com",
+        "name": "Alex",
+        "mobile": "01012345678",
+        "available": true,
+        "createdAt": "2026-03-11T03:25:54.049Z",
+        "updatedAt": "2026-03-11T03:25:54.049Z"
+      }
+    }
+  })
+  async findOneById(@Param('id') id: number) {
+    try {
+
+      return await this.noticEmailService.findOneById(id);
+
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode']);
+    }
+  }
+
 
 }
