@@ -1,97 +1,92 @@
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+  <a href="https://www.always-on.co.kr/" target="blank"><img src="https://img.notionusercontent.com/s3/prod-files-secure%2F5988ad93-bb7e-428d-97bf-08678d967189%2Fd172351b-1626-4057-8c1e-268a58a37b85%2FALON_symbol_green.png/size/w=250?exp=1773305854&sig=lIBXEL_sPJnwXSXElvc2jEwbxxO8mT66_vDmaEVKTpg&id=31ad73d6-a6e3-8087-bae0-dc525f7b333b&table=block" width="120" alt="아론 웹사이트 링크" /></a>
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 프로젝드 개요
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+해당 프로젝트는 "[아론] 소프트웨어 개발 채용\_코딩 과제"로 백엔드 파트를 진행하였습니다.
 
-## Description
+NestJS(NodeJS)를 이용하여 개발을 진행하였으며 현재 웹상에서 [배포](https://alon-test-backend.alex-choi.com/api-docs)되어있는 상태입니다.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+해당 프로젝트에 대한 자세한 설명은 [아론 백엔드 과제 개발문서](https://docs.google.com/document/d/1cLCWiyr29opcE1YZENhP0E3IZSs50d1uHPjERNZptM8/edit?usp=sharing)를 참고해 주시기 바랍니다.
 
-## Project setup
+[과제링크](https://stone-conifer-1a0.notion.site/_-31ad73d6a6e38087bae0dc525f7b333b) 백엔드 과제
 
-```bash
-$ npm install
-```
+## 프로젝트 셋팅방
 
-## Compile and run the project
+우선사항
+
+- .env.example 파일을 복사해서 .env파일로 추가합니다.
+- postgres정보 및 메일을 보낼시 smtp정보를 입력합니다. ([배포](https://alon-test-backend.alex-choi.com/api-docs)사이트에는 구현되어 있음)
+- postgres정보가 일치하지 않거나 접속이 불가능하면 백엔드 서버 자체가 실행되지 않습니다. (postgres와 함께 로컬에서 실행시 2번 또는 3번 참고)
+- docker 및 docker-compose가 설치되어 있어야 합니다.
+- 서버가 로컬에서 실행되면 Swagger의 문서를 확인할수 있습니다. http://localhost:3000/api-docs 에서 확인할수 있으며 외부 노출 포트에 따라 3000번은 변경할수 있습니다.
+
+## 실행하는 방법(Ubuntu)
+
+### 1. docker로 실행하는 방법
+
+- Dockerfile.dev파일이 있는 경로에서 터미널 실행
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+이미지 빌드
+$ docker build -f Dockerfile.dev -t [이미지 이름]:[버전] .
 ```
-
-## Run tests
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+도커로 컨테이너 실행
+$ docker run -p [원하는 출력 포트]:3000 -d [이미지 이름]:[버전]
 ```
 
-## Deployment
+### 2. docker-compose로 실행하는 방법
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+- Dockerfile.dev파일이 있는 경로에서 터미널 실행
+- .env.example 파일을 .env파일로 변경.
+- 이메일 알림을 받아야 하면 이메일 정보 입력
+- 설정포트를 위해 .env파일의 DOCKER_PORT 입력
+- docker-compsoe로 실행되는 postgres는 4001포트를 점유합니다.
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+도커 컴포즈로 실행
+$ docker-compose -f docker-compose.test.yaml up -d --build
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+```bash
+도커 컴포즈로 정지(볼륨 삭제안함)
+$ docker-compose -f docker-compose.test.yaml down
+```
 
-## Resources
+```bash
+도커 컴포즈로 정지(볼륨 삭제)
+$ docker-compose -f docker-compose.test.yaml down -v
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+### 3. Bash파일로 실행하는 방법
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- Dockerfile.dev파일이 있는 경로에서 터미널 실행
+- .env.example 파일을 .env파일로 변경.
+- 이메일 알림을 받아야 하면 이메일 정보 입력
+- 설정포트를 위해 .env파일의 DOCKER_PORT 입력
+- docker-compsoe로 실행며 postgres는 4001포트를 점유합니다.
+- development_test_run.sh, development_down.sh파일의 chmod권한을 설정해야 합니다.
 
-## Support
+```bash
+development_test_run.sh로 실행
+$ ./development_test_run.sh
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+development_down.sh로 정지(볼륨 삭제안함)
+$ ./development_down.sh
+```
 
-## Stay in touch
+## 링크
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- 과제 GitHub - [링크](https://github.com/Alex-Choi0/test_backend_alon)
+- 배포 웹사이트 - [링크](https://alon-test-backend.alex-choi.com/api-docs)
+- 데이터베이스 스키마 - [링크](https://dbdiagram.io/d/test_alon_schema-69ad5e80a44dc25f8b423993)
+- 아론 백엔드 과제 개발문서 - [링크](https://docs.google.com/document/d/1cLCWiyr29opcE1YZENhP0E3IZSs50d1uHPjERNZptM8/edit?usp=sharing)
+- 참고 기술 블로그 - [링크](https://engineeringshw.blogspot.com/)
 
 ## License
 
