@@ -28,7 +28,7 @@ export class ServerErrorService {
     }
   }
 
-  async getErrorCode(location : string, message: string = 'Server Error', statusCode: number = -1) {
+  async getErrorCode(location: string, message: string = 'Server Error', statusCode: number = -1) {
 
     try {
       console.log("init statusCode : ", statusCode);
@@ -97,6 +97,7 @@ export class ServerErrorService {
 
   CONFLICT = [
     '이미 존재하는 디바이스입니다.',
+    '이미 존재하는 이메일 입니다.'
   ]
 
   BAD_REQUEST = [
