@@ -69,6 +69,18 @@ export class NoticEmailService {
     }
   }
 
+  async findOneById(id: number) {
+    try {
+      return await this.noticEmailRepository.findOneById(id);
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(
+        this.errorLocation,
+        err['message'],
+        err['statusCode']
+      );
+    }
+  }
+
   async findManyOptions(
     keyword: string,
     skip: number,
