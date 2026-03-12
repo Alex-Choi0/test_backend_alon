@@ -72,7 +72,7 @@ export class SensorPayloadController {
   @Post('5/create/many')
   @ApiOperation({
     summary: '하나의 센서가 여러개의 데이터를 전송한다. #5',
-    description: '하나의 센서가 여러개의 데이터를 배열로 전송한다.'
+    description: '하나의 센서가 여러개의 데이터를 배열로 전송한다. 시리얼 번호(serial_number)가 모두 동일해야 한다.'
   })
   @ApiCreatedResponse({
     description: `정상적으로 저장시\n

@@ -51,5 +51,21 @@ export class StatisticsService {
     }
   }
 
+  // 오작동된 센서에서 수집된 데이터의 평균과 중앙값을 확인한다.
+  async getSensorErrorDataAvgMidData(
+    startDate: string,
+    endDate: string,
+    serial_numbers: string[] = [],
+    modeSelect: MODESELECT = MODESELECT.전체
+  ) {
+    try {
+
+      return await this.sensorErrorService.getAvgMidErrorData(startDate, endDate, serial_numbers, modeSelect);
+
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode'])
+    }
+  }
+
 
 }
