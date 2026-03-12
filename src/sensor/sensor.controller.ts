@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
+import { ApiCreatedResponse, ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { MODESELECT, OrderEnum, SENSOR_STATUS_SELECT } from 'src/enum';
 import { ServerErrorService } from 'src/server_error/server_error.service';
 import { CreateOneSensorDto } from './dto/create-one-sensor.dto';
@@ -23,6 +23,34 @@ export class SensorController {
   @ApiOperation({
     summary: '하나의 시리얼 번호를 갖고있는 센서를 생성한다. #3',
     description: '수신받을 센서 하나를 생성한다.'
+  })
+  @ApiCreatedResponse({
+    description: `정상적으로 응답시\n
+    {
+      "id": 센서의 시리얼 번호,
+      "name": 센서 이름,
+      "model": 센서의 모델명,
+      "manufacturer": 센서의 제조사,
+      "lastMode": 마지막 모드(처음 생성시 null값),
+      "lastTime": 마지막 데이터 수신 시간(처음 생성시 null값),
+      "lastSensorPayloadId": 마지막 데이터 수신 ID(처음 생성시 null값),
+      "createdAt": "레코드 생성날짜",
+      "updatedAt": "레코드 업데이트 날짜"
+    }
+    `,
+    schema: {
+      example: {
+        "id": "SANSOR-A-1004",
+        "name": "온도 입력 모듈",
+        "model": "NI-9213",
+        "manufacturer": "National Instruments(NI)",
+        "lastMode": null,
+        "lastTime": null,
+        "lastSensorPayloadId": null,
+        "createdAt": "2026-03-12T10:36:15.743Z",
+        "updatedAt": "2026-03-12T10:36:15.743Z"
+      }
+    }
   })
   async createOne(@Body() dto: CreateOneSensorDto) {
     try {

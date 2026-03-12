@@ -12,7 +12,7 @@ NestJS(NodeJS)를 이용하여 개발을 진행하였으며 현재 웹상에서 
 
 [과제링크](https://stone-conifer-1a0.notion.site/_-31ad73d6a6e38087bae0dc525f7b333b) 백엔드 과제
 
-## 프로젝트 셋팅방
+## 프로젝트 셋팅방법
 
 우선사항
 

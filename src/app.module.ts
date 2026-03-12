@@ -21,6 +21,11 @@ import { StatisticsModule } from './statistics/statistics.module';
         BACKEND_SETTING: Joi.string().default('테스트'),
         NORMAL_TIME: Joi.number().default(600), // 센서 모드가 NORMAL일 경우 default는 600초후 데이터가 안오면 MALFUNCTION이다.
         EMERGENCY_TIME: Joi.number().default(10), // 센서 모드가 EMERGENCY일 경우 default는 10초후 데이터가 안오면 MALFUNCTION이다.
+        DB_HOST: Joi.string().required(), // DB접속에 필요한 호스트
+        DB_USERNAME: Joi.string().required(), // DB접속에 사용되는 유저
+        DB_PASSWORD: Joi.string().required(), // DB접속에 필요한 비밀번호. (DB_USERNAME에 대응)
+        DB_DATABASE: Joi.string().required(), // 접속할 데이터베이스 이름
+        DB_SYNCHRONIZE: Joi.string().default('false'), // 실시간 데이터베이스 업데이트 유무. true이면 코드의 Entity변화에 따라 테이블이 업데이트(테스트용). 기본은 false
       }),
     }),
     TypeOrmModule.forRoot({
