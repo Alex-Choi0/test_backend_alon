@@ -1,10 +1,11 @@
 import { Body, Controller, Get, HttpCode, Inject, Param, Post } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiParam } from '@nestjs/swagger';
+import { ApiOkResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import { MODESELECT } from 'src/enum';
 import { FindManySensorPayload } from 'src/sensor_payload/dto/find-many-sensor_payload.dto';
 import { ServerErrorService } from 'src/server_error/server_error.service';
 import { StatisticsService } from './statistics.service';
 
+@ApiTags('데이터의 통계를 응답하는 API')
 @Controller('statistics')
 export class StatisticsController {
   constructor(
