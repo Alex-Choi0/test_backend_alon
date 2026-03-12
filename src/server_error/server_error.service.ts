@@ -101,7 +101,8 @@ export class ServerErrorService {
   ]
 
   BAD_REQUEST = [
-    '과거시간으로 설정할수 없습니다.'
+    '과거시간으로 설정할수 없습니다.',
+    '잘못된 시간입니다.'
   ]
 
   FORBIDDEN = [
