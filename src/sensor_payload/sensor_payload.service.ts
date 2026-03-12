@@ -1,11 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
+import { MODESELECT, SENSOR_STATUS_ENUM } from 'src/enum';
+import { SensorService } from 'src/sensor/sensor.service';
 import { ServerErrorService } from 'src/server_error/server_error.service';
 import { TimerService } from 'src/utils/service_timer/timer.service';
 import { CreateOneSensorPayloadDto } from './dto/create-one-sensor_payload.dto';
 import { SensorPayloadRepository } from './repository/sensor_payload.repository';
-import { SensorService } from 'src/sensor/sensor.service';
-import { MODEENUM, MODESELECT, SENSOR_STATUS_ENUM } from 'src/enum';
-import { SensorEntity } from 'src/sensor/entities/sensor.entity';
 
 @Injectable()
 export class SensorPayloadService {
@@ -135,6 +134,24 @@ export class SensorPayloadService {
       sensorEndDate = sensorEndDate == '-' ? sensorEndDate : this.timerService.changeToUTC(sensorEndDate);
 
       return await this.sensorPayloadRepository.findManyByOptions(startDate, endDate, sensorStartDate, sensorEndDate, skip, take, serial_numbers, mode);
+
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode'])
+    }
+  }
+
+  async getAvgMidData(
+    sensorStartDate: string,
+    sensorEndDate: string,
+    serial_numbers: string[] = [],
+    modeSelect: MODESELECT = MODESELECT.전체
+  ) {
+    try {
+
+      sensorStartDate = sensorStartDate == '-' ? sensorStartDate : this.timerService.changeToUTC(sensorStartDate);
+      sensorEndDate = sensorEndDate == '-' ? sensorEndDate : this.timerService.changeToUTC(sensorEndDate);
+
+      return await this.sensorPayloadRepository.getAvgMidData(sensorStartDate, sensorEndDate, serial_numbers, modeSelect);
 
     } catch (err) {
       await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode'])

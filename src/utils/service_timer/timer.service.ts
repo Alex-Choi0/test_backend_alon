@@ -53,9 +53,11 @@ export class TimerService {
     return result;
   }
 
+  // 여러 타임존(KST포함)이 들어오면 UTC타임존으로 변환하다.
   changeToUTC(datetime: string): string {
     const data = new Date(datetime);
 
+    // 잘못된 String이 들어올시 에러 응답
     if (isNaN(data.getTime())) {
       throw new Error('잘못된 시간입니다.');
     }
