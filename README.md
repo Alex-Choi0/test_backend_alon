@@ -28,13 +28,15 @@ NestJS(NodeJS)를 이용하여 개발을 진행하였으며 현재 웹상에서 
 
 - Dockerfile.dev파일이 있는 경로에서 터미널 실행
 
-```bash
 이미지 빌드
+
+```bash
 $ docker build -f Dockerfile.dev -t [이미지 이름]:[버전] .
 ```
 
-```bash
 도커로 컨테이너 실행
+
+```bash
 $ docker run -p [원하는 출력 포트]:3000 -d [이미지 이름]:[버전]
 ```
 
@@ -46,18 +48,21 @@ $ docker run -p [원하는 출력 포트]:3000 -d [이미지 이름]:[버전]
 - 설정포트를 위해 .env파일의 DOCKER_PORT 입력
 - docker-compsoe로 실행되는 postgres는 4001포트를 점유합니다.
 
-```bash
 도커 컴포즈로 실행
+
+```bash
 $ docker-compose -f docker-compose.test.yaml up -d --build
 ```
 
-```bash
 도커 컴포즈로 정지(볼륨 삭제안함)
+
+```bash
 $ docker-compose -f docker-compose.test.yaml down
 ```
 
-```bash
 도커 컴포즈로 정지(볼륨 삭제)
+
+```bash
 $ docker-compose -f docker-compose.test.yaml down -v
 ```
 
@@ -70,13 +75,15 @@ $ docker-compose -f docker-compose.test.yaml down -v
 - docker-compsoe로 실행며 postgres는 4001포트를 점유합니다.
 - development_test_run.sh, development_down.sh파일의 chmod권한을 설정해야 합니다.
 
-```bash
 development_test_run.sh로 실행
+
+```bash
 $ ./development_test_run.sh
 ```
 
-```bash
 development_down.sh로 정지(볼륨 삭제안함)
+
+```bash
 $ ./development_down.sh
 ```
 
