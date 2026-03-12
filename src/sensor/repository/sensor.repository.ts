@@ -24,6 +24,7 @@ export class SensorRepository {
     // 하나의 센서를 ID로 찾는다.
     async findOneById(id: string) {
         const sql = this.sensorEntity.createQueryBuilder('record')
+            .leftJoinAndSelect('record.lastSensorPayload', 'lastSensorPayload')
             .where('record.id = :id', { id })
 
         return await sql.getOne();
