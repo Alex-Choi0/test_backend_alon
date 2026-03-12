@@ -77,4 +77,22 @@ export class SensorErrorService {
     }
   }
 
+  async getAvgMidErrorData(
+    startDate: string,
+    endDate: string,
+    serial_numbers: string[] = [],
+    modeSelect: MODESELECT = MODESELECT.전체
+  ) {
+    try {
+
+      startDate = startDate == '-' ? startDate : this.timerService.changeToUTC(startDate);
+      endDate = endDate == '-' ? endDate : this.timerService.changeToUTC(endDate);
+
+      return await this.sensorErrorRepository.getAvgMidErrorData(startDate, endDate, serial_numbers, modeSelect);
+
+    } catch (err) {
+      await this.serverErrorService.getErrorCode(this.errorLocation, err['message'], err['statusCode']);
+    }
+  }
+
 }
