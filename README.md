@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://www.always-on.co.kr/" target="blank"><img src="https://img.notionusercontent.com/s3/prod-files-secure%2F5988ad93-bb7e-428d-97bf-08678d967189%2Fd172351b-1626-4057-8c1e-268a58a37b85%2FALON_symbol_green.png/size/w=250?exp=1773305854&sig=lIBXEL_sPJnwXSXElvc2jEwbxxO8mT66_vDmaEVKTpg&id=31ad73d6-a6e3-8087-bae0-dc525f7b333b&table=block" width="120" alt="아론 웹사이트 링크" /></a>
+  <a href="https://www.always-on.co.kr/" target="blank"><img src="./alon.PNG" width="120" alt="아론 웹사이트 링크" /></a>
 </p>
 
 ## 프로젝드 개요
